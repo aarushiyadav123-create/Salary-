@@ -171,16 +171,22 @@
             background: #fff3e0;
             border: 1px solid #ffe0b2;
             border-radius: 10px;
-            padding: 10px;
+            padding: 12px;
             margin-top: 14px;
             font-size: 12px;
             color: #e65100;
             box-shadow: 0 2px 6px rgba(255,152,0,0.1);
         }
         .rules-card h5 {
-            margin: 0 0 4px 0;
+            margin: 0 0 6px 0;
             color: #f57c00;
             font-size: 13px;
+            border-bottom: 1px dashed #ffe0b2;
+            padding-bottom: 4px;
+        }
+        .rules-card p {
+            margin: 4px 0;
+            line-height: 1.4;
         }
         .btn-pdf {
             background: linear-gradient(135deg, #f12711, #f5af19);
@@ -348,7 +354,7 @@
         </div>
     </div>
 
-    <!-- 3. Income Tax Calculator (Old vs New) - Fixed & Detailed -->
+    <!-- 3. Income Tax Calculator (Old vs New) - Detailed & Explained -->
     <div id="tax" class="calculator-section">
         <div class="section-title">📊 आयकर गणना (Old vs New Tax Regime)</div>
         <div class="form-group">
@@ -368,8 +374,12 @@
             <input type="number" id="taxNpsExtra" value="50000" readonly>
         </div>
         <div class="form-group">
-            <label>अन्य छूट (HRA, Home Loan Interest ₹):</label>
-            <input type="number" id="taxOtherDed" value="50000" oninput="calcTax()">
+            <label>मकान किराया भत्ता छूट (HRA Exemption ₹):</label>
+            <input type="number" id="taxHra" value="0" oninput="calcTax()">
+        </div>
+        <div class="form-group">
+            <label>गृह ऋण ब्याज छूट (Home Loan Interest - Max ₹2 Lakh):</label>
+            <input type="number" id="taxHomeLoan" value="0" max="200000" oninput="calcTax()">
         </div>
 
         <div class="result-box">
@@ -379,6 +389,13 @@
             <div class="result-row"><span>नयी व्यवस्था Tax (New Tax):</span> <span id="taxNewResult">₹0</span></div>
             <div class="result-row"><span>नयी व्यवस्था Effective Rate:</span> <span id="taxNewRate">0%</span></div>
             <div class="result-row result-total result-net"><span>सबसे बेहतर विकल्प:</span> <span id="taxBestOption" style="color:#d81b60;">-</span></div>
+        </div>
+
+        <div class="rules-card">
+            <h5>📖 टैक्स नियम और छूट की पूरी जानकारी (Tax Rules & Guide)</h5>
+            <p><b>1. Old Tax Regime (पुरानी व्यवस्था):</b> इसमें 80C (₹1.5 Lakh), NPS 80CCD(1B) (₹50,000), HRA, और Home Loan Interest (₹2 Lakh तक) जैसी सभी छूट मिलती हैं।</p>
+            <p><b>2. New Tax Regime (नयी व्यवस्था):</b> इसमें सामान्यतः कोई डिडक्शन नहीं मिलती, केवल <b>Standard Deduction (₹75,000)</b> मिलती है, लेकिन इसके टैक्स स्लैब बहुत कम और आसान हैं।</p>
+            <p><b>3. Effective Rate (%):</b> यह बताता है कि आपकी कुल सैलरी का कुल कितना प्रतिशत हिस्सा टैक्स के रूप में जा रहा है।</p>
         </div>
     </div>
 
@@ -677,10 +694,12 @@ function calcTax() {
     let stdDed = 75000;
     let c80 = 150000; // Locked max limit
     let npsEx = 50000; // Locked max limit
-    let other = parseFloat(document.getElementById('taxOtherDed').value) || 0;
+    let hra = parseFloat(document.getElementById('taxHra').value) || 0;
+    let homeLoan = parseFloat(document.getElementById('taxHomeLoan').value) || 0;
+    if(homeLoan > 200000) homeLoan = 200000; // Max limit 2 Lakh
 
     // --- OLD REGIME ---
-    let taxableOld = gross - (stdDed + c80 + npsEx + other);
+    let taxableOld = gross - (stdDed + c80 + npsEx + hra + homeLoan);
     if(taxableOld < 0) taxableOld = 0;
     let taxOld = 0;
 
