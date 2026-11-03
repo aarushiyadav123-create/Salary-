@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
             margin: 0;
             padding: 10px;
             min-height: 100vh;
@@ -16,86 +16,95 @@
             max-width: 500px;
             background: #ffffff;
             padding: 20px;
-            border-radius: 16px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             margin: auto;
         }
         h2 {
             text-align: center;
             color: #ffffff;
-            background: linear-gradient(135deg, #1a73e8, #0d47a1);
-            padding: 12px;
-            border-radius: 10px;
-            font-size: 20px;
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 21px;
             margin-bottom: 20px;
-            box-shadow: 0 4px 10px rgba(26,115,232,0.3);
+            box-shadow: 0 4px 15px rgba(255,65,108,0.4);
+            letter-spacing: 0.5px;
         }
         .tabs {
             display: flex;
             flex-wrap: wrap;
-            gap: 4px;
-            background: #e8f0fe;
-            border-radius: 10px;
-            padding: 5px;
+            gap: 5px;
+            background: #f0f3f8;
+            border-radius: 12px;
+            padding: 6px;
             margin-bottom: 20px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
         }
         .tab-btn {
             flex: 1 1 30%;
-            padding: 8px 4px;
+            padding: 9px 4px;
             border: none;
             background: transparent;
             cursor: pointer;
             font-size: 11px;
             font-weight: bold;
-            color: #555;
-            border-radius: 8px;
+            color: #444;
+            border-radius: 9px;
             text-align: center;
             transition: all 0.3s ease;
         }
         .tab-btn.active {
-            background: linear-gradient(135deg, #1a73e8, #4285f4);
+            background: linear-gradient(135deg, #00b09b, #96c93d);
             color: white;
-            box-shadow: 0 2px 6px rgba(26,115,232,0.4);
+            box-shadow: 0 4px 10px rgba(0,176,155,0.4);
         }
         .calculator-section {
             display: none;
         }
         .calculator-section.active {
             display: block;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .form-group {
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }
         label {
             display: block;
             font-size: 13px;
             font-weight: bold;
-            margin-bottom: 4px;
-            color: #333;
+            margin-bottom: 5px;
+            color: #2c3e50;
         }
         input, select {
             width: 100%;
-            padding: 9px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
+            padding: 10px;
+            border: 2px solid #e1e8ed;
+            border-radius: 9px;
             box-sizing: border-box;
             font-size: 14px;
-            background-color: #fafafa;
-            transition: border 0.3s;
+            background-color: #fdfefe;
+            transition: all 0.3s;
         }
         input:focus, select:focus {
-            border-color: #1a73e8;
+            border-color: #00b09b;
             outline: none;
             background-color: #fff;
+            box-shadow: 0 0 8px rgba(0,176,155,0.2);
         }
         .section-title {
             font-size: 14px;
             color: #ffffff;
-            background: linear-gradient(135deg, #37474f, #263238);
-            padding: 6px 10px;
-            border-radius: 6px;
+            background: linear-gradient(135deg, #8e2de2, #4a00e0);
+            padding: 8px 12px;
+            border-radius: 8px;
             margin: 18px 0 10px 0;
             font-weight: bold;
+            box-shadow: 0 3px 8px rgba(74,0,224,0.3);
         }
         .input-row, .tenure-row {
             display: flex;
@@ -107,44 +116,44 @@
         }
         .tenure-field label {
             font-size: 11px;
-            color: #555;
+            color: #666;
             margin-bottom: 2px;
         }
         .sub-val {
             font-size: 12px;
-            color: #1a73e8;
-            margin-top: 3px;
+            color: #00796b;
+            margin-top: 4px;
             font-weight: bold;
         }
         .result-box {
-            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-            padding: 15px;
-            border-radius: 12px;
-            margin-top: 15px;
+            background: linear-gradient(135deg, #e0f7fa, #80deea);
+            padding: 16px;
+            border-radius: 14px;
+            margin-top: 18px;
             text-align: left;
-            border-left: 5px solid #1a73e8;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-left: 6px solid #00acc1;
+            box-shadow: 0 5px 15px rgba(0,172,193,0.2);
         }
         .result-box h4 {
             margin: 0 0 10px 0;
-            color: #0d47a1;
+            color: #006064;
             font-size: 16px;
             text-align: center;
-            border-bottom: 1px solid #90caf9;
-            padding-bottom: 5px;
+            border-bottom: 1.5px dashed #b2ebf2;
+            padding-bottom: 6px;
         }
         .result-row {
             display: flex;
             justify-content: space-between;
             font-size: 14px;
-            margin-bottom: 6px;
-            color: #333;
+            margin-bottom: 7px;
+            color: #263238;
         }
         .result-total {
             font-size: 16px;
             font-weight: bold;
-            color: #d32f2f;
-            border-top: 2px dashed #90caf9;
+            color: #d81b60;
+            border-top: 2px dashed #b2ebf2;
             padding-top: 8px;
             margin-top: 8px;
         }
@@ -154,32 +163,35 @@
             color: #2e7d32;
         }
         .rules-card {
-            background: #fff8e1;
-            border: 1px solid #ffe082;
-            border-radius: 8px;
-            padding: 10px;
-            margin-top: 15px;
+            background: #fff3e0;
+            border: 1px solid #ffe0b2;
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 16px;
             font-size: 12px;
-            color: #5d4037;
+            color: #e65100;
+            box-shadow: 0 2px 6px rgba(255,152,0,0.1);
         }
         .rules-card h5 {
             margin: 0 0 5px 0;
-            color: #f57f17;
+            color: #f57c00;
             font-size: 13px;
         }
         .btn-pdf {
-            background: linear-gradient(135deg, #ff9800, #f57c00);
+            background: linear-gradient(135deg, #f12711, #f5af19);
             color: white;
             border: none;
-            padding: 10px;
+            padding: 12px;
             width: 100%;
-            border-radius: 8px;
-            font-size: 14px;
+            border-radius: 10px;
+            font-size: 15px;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 15px;
-            box-shadow: 0 4px 10px rgba(255,152,0,0.3);
+            margin-top: 18px;
+            box-shadow: 0 5px 15px rgba(241,39,17,0.4);
+            transition: transform 0.2s;
         }
+        .btn-pdf:active { transform: scale(0.98); }
         @media print {
             body { background: white; padding: 0; }
             .app-container { box-shadow: none; width: 100%; max-width: 100%; }
@@ -190,17 +202,17 @@
 <body>
 
 <div class="app-container">
-    <h2>हिसाब-किताब टूल्स</h2>
+    <h2>⚡ हिसाब-किताब स्मार्ट टूल्स</h2>
     
     <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('salary')">वेतन पर्ची</button>
-        <button class="tab-btn" onclick="switchTab('nps')">NPS प्लानर</button>
-        <button class="tab-btn" onclick="switchTab('leave')">लीव व ग्रैच्युटी</button>
-        <button class="tab-btn" onclick="switchTab('emi')">लोन EMI</button>
-        <button class="tab-btn" onclick="switchTab('fd')">एफडी (FD)</button>
-        <button class="tab-btn" onclick="switchTab('sip')">बचत/SIP</button>
-        <button class="tab-btn" onclick="switchTab('ppf')">PPF</button>
-        <button class="tab-btn" onclick="switchTab('ssy')">सुकन्या</button>
+        <button class="tab-btn active" onclick="switchTab('salary', this)">वेतन पर्ची</button>
+        <button class="tab-btn" onclick="switchTab('nps', this)">NPS प्लानर</button>
+        <button class="tab-btn" onclick="switchTab('leave', this)">लीव व ग्रैच्युटी</button>
+        <button class="tab-btn" onclick="switchTab('emi', this)">लोन EMI</button>
+        <button class="tab-btn" onclick="switchTab('fd', this)">एफडी (FD)</button>
+        <button class="tab-btn" onclick="switchTab('sip', this)">बचत/SIP</button>
+        <button class="tab-btn" onclick="switchTab('ppf', this)">PPF</button>
+        <button class="tab-btn" onclick="switchTab('ssy', this)">सुकन्या</button>
     </div>
 
     <!-- 1. Salary Calculator -->
@@ -331,15 +343,15 @@
             <div class="result-row"><span>आगे नई जमा राशि (Invested):</span> <span id="npsNewInv">₹0</span></div>
             <div class="result-row"><span>कुल रिटर्न (Compound Interest):</span> <span id="npsTotalRet">₹0</span></div>
             <div class="result-row result-total"><span>कुल रिटायरमेंट फंड (Total Corpus):</span> <span id="npsCorpusTotal">₹0</span></div>
-            <div class="result-row" style="margin-top: 8px; color: #1565c0; font-weight: bold;"><span>60% टैक्स-फ्री एकमुश्त (Lump-sum):</span> <span id="npsLumpSum">₹0</span></div>
-            <div class="result-row" style="color: #6a1b9a; font-weight: bold;"><span>40% एन्युइटी (Pension Fund):</span> <span id="npsAnnuityFund">₹0</span></div>
+            <div class="result-row" style="margin-top: 8px; color: #0277bd; font-weight: bold;"><span>60% टैक्स-फ्री एकमुश्त (Lump-sum):</span> <span id="npsLumpSum">₹0</span></div>
+            <div class="result-row" style="color: #4a148c; font-weight: bold;"><span>40% एन्युइटी (Pension Fund):</span> <span id="npsAnnuityFund">₹0</span></div>
             <div class="result-row result-net" style="margin-top: 6px;"><span>अनुमानित मासिक पेंशन (Monthly Pension):</span> <span id="npsMonthlyPension">₹0</span></div>
         </div>
 
         <div class="rules-card">
             <h5>📖 NPS निकासी और पेंशन नियम (Rules)</h5>
             <p><b>Lump-sum & Pension:</b> Retirement par total corpus ka 60% paisa ek sath tax-free milta hai, aur baki 40% se pension (Annuity) shuru hoti hai.</p>
-            <p><b>हिन्दी:</b> कुल फंड का 60% हिस्सा एक साथ (Lump-sum) आपके खाते में आ जाता है (जिसपर कोई टैक्स नहीं लगता), और शेष 40% हिस्से से हर महीने की पेंशन (लगभग 6.5% रिटर्न मानकर) तय होती है।</p>
+            <p><b>हिन्दी:</b> कुल फंड का 60% हिस्सा एक साथ (Lump-sum) आपके खाते में आ जाता है (जिसपर कोई टैक्स नहीं लगता), और शेष 40% हिस्से से हर महीने की पेंशन तय होती है।</p>
         </div>
     </div>
 
@@ -523,11 +535,15 @@
 </div>
 
 <script>
-function switchTab(tabId) {
+function switchTab(tabId, btnElement) {
     document.querySelectorAll('.calculator-section').forEach(sec => sec.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    
     document.getElementById(tabId).classList.add('active');
-    event.currentTarget.classList.add('active');
+    if(btnElement) {
+        btnElement.classList.add('active');
+    }
+    localStorage.setItem('activeTab', tabId);
 }
 
 // Local Storage Save & Load
@@ -563,6 +579,16 @@ window.onload = function() {
         document.getElementById('taxType').value = localStorage.getItem('taxType');
         document.getElementById('loanDed').value = localStorage.getItem('loanDed');
     }
+
+    // Restore last active tab
+    let savedTab = localStorage.getItem('activeTab');
+    if(savedTab) {
+        let targetBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick').includes(savedTab));
+        if(targetBtn) {
+            switchTab(savedTab, targetBtn);
+        }
+    }
+
     calcSalary();
     calcNPSPlanner();
     calcLeaveAndGratuity();
@@ -652,10 +678,8 @@ function calcNPSPlanner() {
     let totalInvestedAll = existingCorpus + totalNewInvested;
     let totalReturns = futureCorpus - totalInvestedAll;
 
-    // 60% Lump-sum & 40% Annuity calculation
     let lumpSum = futureCorpus * 0.60;
     let annuityFund = futureCorpus * 0.40;
-    // Assuming 6.5% annual return on annuity fund for monthly pension
     let monthlyPension = (annuityFund * (0.065 / 12));
 
     document.getElementById('npsOldInv').innerText = '₹ ' + Math.round(existingCorpus);
