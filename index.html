@@ -291,33 +291,37 @@
         <button class="btn-pdf" onclick="window.print()">📥 PDF / Print रिपोर्ट डाउनलोड करें</button>
     </div>
 
-    <!-- 2. Advanced NPS Retirement Planner with Existing Corpus & Dates -->
+    <!-- 2. Advanced NPS Retirement Planner with Salary Increments -->
     <div id="nps" class="calculator-section">
         <div class="section-title">🛡️ NPS रिटायरमेंट और कॉर्पस प्लानर</div>
         <div class="form-group">
-            <label>अब तक का जमा कुल NPS बैलेंस (Existing Saved Corpus ₹):</label>
-            <input type="number" id="npsExistingCorpus" value="500000" oninput="calcNPSPlanner()">
+            <label>अब तक का जमा कुल NPS बैलेंस (Existing Corpus ₹):</label>
+            <input type="number" id="npsExistingCorpus" value="2200000" oninput="calcNPSPlanner()">
         </div>
         <div class="form-group">
             <label>वर्तमान बेसिक + DA कुल मासिक (₹):</label>
-            <input type="number" id="npsBaseMonthly" value="86301" oninput="calcNPSPlanner()">
+            <input type="number" id="npsBaseMonthly" value="94000" oninput="calcNPSPlanner()">
         </div>
         <div class="form-group">
             <label>कुल मासिक NPS अंशदान (Employee + Employer %):</label>
             <input type="number" id="npsContribPercent" value="14" step="0.5" oninput="calcNPSPlanner()">
-            <div class="sub-val">मासिक नई जमा राशि: <span id="npsMonthlyDep">₹0</span></div>
+            <div class="sub-val">वर्तमान मासिक जमा राशि: <span id="npsMonthlyDep">₹0</span></div>
+        </div>
+        <div class="form-group">
+            <label>वार्षिक वेतन वृद्धि / Hike (% प्रति वर्ष):</label>
+            <input type="number" id="npsSalaryHike" value="5" step="0.5" oninput="calcNPSPlanner()">
         </div>
         <div class="form-group">
             <label>अनुमानित वार्षिक रिटर्न (%):</label>
-            <input type="number" id="npsReturnRate" value="10" step="0.5" oninput="calcNPSPlanner()">
+            <input type="number" id="npsReturnRate" value="8.5" step="0.5" oninput="calcNPSPlanner()">
         </div>
         <div class="form-group">
-            <label>आज की तारीख (Current Date / Calculation Start):</label>
+            <label>आज की तारीख (Calculation Start Date):</label>
             <input type="date" id="npsStartDate" value="2026-11-04" onchange="calcNPSPlanner()">
         </div>
         <div class="form-group">
-            <label>रिटायरमेंट या VRS की तारीख (Retirement / VRS Date):</label>
-            <input type="date" id="npsRetireDate" value="2045-01-01" onchange="calcNPSPlanner()">
+            <label>रिटायरमेंट या VRS की तारीख (Retirement Date):</label>
+            <input type="date" id="npsRetireDate" value="2045-08-31" onchange="calcNPSPlanner()">
         </div>
         <div class="sub-val" style="margin-bottom: 8px;">बची हुई सेवा अवधि (Time Left): <span id="npsTimeLeftText">0 वर्ष</span></div>
 
@@ -331,8 +335,8 @@
 
         <div class="rules-card">
             <h5>📖 NPS नियम और जानकारी (Rules)</h5>
-            <p><b>English:</b> Combines your existing saved NPS balance with future monthly contributions, growing via compound interest till retirement or VRS date.</p>
-            <p><b>हिन्दी:</b> इसमें आपका पहले से जमा NPS बैलेंस और आगे हर महीने कटने वाला पैसा दोनों जुड़कर चक्रवृद्धि ब्याज (Compound Interest) के साथ रिटायरमेंट या VRS के समय का कुल फंड बनाते हैं।</p>
+            <p><b>English:</b> Automatically increases monthly NPS contributions every year based on your Annual Salary Hike percentage, compounded monthly till retirement.</p>
+            <p><b>हिन्दी:</b> यह कैलकुलेटर हर साल वेतन में होने वाली वृद्धि (Hike %) के हिसाब से आपकी NPS कटौती को स्वतः बढ़ाता है, जिससे रिटायरमेंट पर मिलने वाला कॉर्पस एकदम सटीक बैठता है।</p>
         </div>
     </div>
 
@@ -341,11 +345,11 @@
         <div class="section-title">🏖️ अवकाश नगदीकरण (Leave Encashment)</div>
         <div class="form-group">
             <label>रिटायरमेंट के समय Basic Salary (₹):</label>
-            <input type="number" id="leaveBasic" value="50000" oninput="calcLeaveAndGratuity()">
+            <input type="number" id="leaveBasic" value="120000" oninput="calcLeaveAndGratuity()">
         </div>
         <div class="form-group">
             <label>रिटायरमेंट के समय DA (₹):</label>
-            <input type="number" id="leaveDa" value="19141" oninput="calcLeaveAndGratuity()">
+            <input type="number" id="leaveDa" value="45000" oninput="calcLeaveAndGratuity()">
         </div>
         <div class="form-group">
             <label>कुल जमा छुट्टियां (Earned Leave - Max 300):</label>
@@ -361,11 +365,11 @@
         <div class="section-title" style="margin-top: 20px;">🏆 ग्रैच्युटी कैलकुलेटर (Gratuity)</div>
         <div class="form-group">
             <label>नौकरी ज्वाइन करने की तारीख (Joining Date):</label>
-            <input type="date" id="joinDate" value="1995-01-01" onchange="calcLeaveAndGratuity()">
+            <input type="date" id="joinDate" value="2011-11-21" onchange="calcLeaveAndGratuity()">
         </div>
         <div class="form-group">
             <label>रिटायरमेंट की तारीख (Retirement Date):</label>
-            <input type="date" id="retireDate" value="2045-01-01" onchange="calcLeaveAndGratuity()">
+            <input type="date" id="retireDate" value="2045-08-31" onchange="calcLeaveAndGratuity()">
         </div>
         <div class="sub-val" style="margin-bottom: 8px;">कुल सेवा अवधि: <span id="serviceYearsText">0 वर्ष</span></div>
 
@@ -605,8 +609,9 @@ function calcSalary() {
 
 function calcNPSPlanner() {
     let existingCorpus = parseFloat(document.getElementById('npsExistingCorpus').value) || 0;
-    let baseMonthly = parseFloat(document.getElementById('npsBaseMonthly').value) || 0;
+    let currentMonthlyBase = parseFloat(document.getElementById('npsBaseMonthly').value) || 0;
     let contribPercent = parseFloat(document.getElementById('npsContribPercent').value) || 0;
+    let salaryHikeRate = parseFloat(document.getElementById('npsSalaryHike').value) / 100 || 0;
     let annualRate = parseFloat(document.getElementById('npsReturnRate').value) / 100 || 0;
     
     let sDate = new Date(document.getElementById('npsStartDate').value);
@@ -621,25 +626,32 @@ function calcNPSPlanner() {
     let monthsRemainder = Math.round((yearsLeft - yearsInt) * 12);
     document.getElementById('npsTimeLeftText').innerText = yearsInt + ' वर्ष ' + monthsRemainder + ' महीने (' + yearsLeft.toFixed(1) + ' वर्ष)';
 
-    let monthlyDep = (baseMonthly * contribPercent) / 100;
-    document.getElementById('npsMonthlyDep').innerText = '₹ ' + Math.round(monthlyDep);
+    let initialMonthlyDep = (currentMonthlyBase * contribPercent) / 100;
+    document.getElementById('npsMonthlyDep').innerText = '₹ ' + Math.round(initialMonthlyDep);
 
     let totalMonths = Math.round(yearsLeft * 12);
     let monthlyRate = annualRate / 12;
-    let newInvested = monthlyDep * totalMonths;
 
-    // Compound existing corpus plus future monthly deposits
     let futureCorpus = existingCorpus;
-    for(let i = 0; i < totalMonths; i++) {
-        futureCorpus = (futureCorpus + monthlyDep) * (1 + monthlyRate);
-    }
-    if(isNaN(futureCorpus) || futureCorpus < 0) futureCorpus = existingCorpus + newInvested;
+    let totalNewInvested = 0;
+    let currentDep = initialMonthlyDep;
 
-    let totalInvestedAll = existingCorpus + newInvested;
+    for(let m = 1; m <= totalMonths; m++) {
+        // Every 12 months, increase salary/contribution by salaryHikeRate
+        if(m > 1 && (m - 1) % 12 === 0) {
+            currentDep *= (1 + salaryHikeRate);
+        }
+        totalNewInvested += currentDep;
+        futureCorpus = (futureCorpus + currentDep) * (1 + monthlyRate);
+    }
+
+    if(isNaN(futureCorpus) || futureCorpus < 0) futureCorpus = existingCorpus + totalNewInvested;
+
+    let totalInvestedAll = existingCorpus + totalNewInvested;
     let totalReturns = futureCorpus - totalInvestedAll;
 
     document.getElementById('npsOldInv').innerText = '₹ ' + Math.round(existingCorpus);
-    document.getElementById('npsNewInv').innerText = '₹ ' + Math.round(newInvested);
+    document.getElementById('npsNewInv').innerText = '₹ ' + Math.round(totalNewInvested);
     document.getElementById('npsTotalRet').innerText = '₹ ' + Math.round(totalReturns);
     document.getElementById('npsCorpusTotal').innerText = '₹ ' + Math.round(futureCorpus);
 }
