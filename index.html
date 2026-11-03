@@ -194,11 +194,12 @@
     
     <div class="tabs">
         <button class="tab-btn active" onclick="switchTab('salary')">वेतन पर्ची</button>
+        <button class="tab-btn" onclick="switchTab('nps')">NPS प्लानर</button>
         <button class="tab-btn" onclick="switchTab('leave')">लीव व ग्रैच्युटी</button>
         <button class="tab-btn" onclick="switchTab('emi')">लोन EMI</button>
         <button class="tab-btn" onclick="switchTab('fd')">एफडी (FD)</button>
         <button class="tab-btn" onclick="switchTab('sip')">बचत/SIP</button>
-        <button class="tab-btn" onclick="switchTab('ppf')">PPF/NPS</button>
+        <button class="tab-btn" onclick="switchTab('ppf')">PPF</button>
         <button class="tab-btn" onclick="switchTab('ssy')">सुकन्या</button>
     </div>
 
@@ -290,7 +291,42 @@
         <button class="btn-pdf" onclick="window.print()">📥 PDF / Print रिपोर्ट डाउनलोड करें</button>
     </div>
 
-    <!-- 2. Leave Encashment & Gratuity Calculator -->
+    <!-- 2. Advanced NPS Retirement Planner -->
+    <div id="nps" class="calculator-section">
+        <div class="section-title">🛡️ NPS रिटायरमेंट फंड प्रोजेक्शन</div>
+        <div class="form-group">
+            <label>वर्तमान बेसिक + DA कुल मासिक (₹):</label>
+            <input type="number" id="npsBaseMonthly" value="86301" oninput="calcNPSPlanner()">
+        </div>
+        <div class="form-group">
+            <label>कुल मासिक NPS अंशदान (Employee + Employer %):</label>
+            <input type="number" id="npsContribPercent" value="14" step="0.5" oninput="calcNPSPlanner()">
+            <div class="sub-val">मासिक जमा राशि: <span id="npsMonthlyDep">₹0</span></div>
+        </div>
+        <div class="form-group">
+            <label>अनुमानित वार्षिक रिटर्न (%):</label>
+            <input type="number" id="npsReturnRate" value="10" step="0.5" oninput="calcNPSPlanner()">
+        </div>
+        <div class="form-group">
+            <label>रिटायरमेंट में बचे कुल वर्ष (Years Left):</label>
+            <input type="number" id="npsYearsLeft" value="19" oninput="calcNPSPlanner()">
+        </div>
+
+        <div class="result-box">
+            <h4>NPS मेच्योरिटी / कॉर्पस विवरण</h4>
+            <div class="result-row"><span>कुल जमा राशि (Total Invested):</span> <span id="npsTotalInv">₹0</span></div>
+            <div class="result-row"><span>कुल रिटर्न (Compound Interest):</span> <span id="npsTotalRet">₹0</span></div>
+            <div class="result-row result-total result-net"><span>कुल रिटायरमेंट फंड (Corpus):</span> <span id="npsCorpusTotal">₹0</span></div>
+        </div>
+
+        <div class="rules-card">
+            <h5>📖 NPS नियम और जानकारी (Rules)</h5>
+            <p><b>English:</b> Calculated based on monthly compounding of employee & employer contributions till retirement age.</p>
+            <p><b>हिन्दी:</b> यह कैलकुलेटर आपकी मासिक NPS कटौती और उस पर मिलने वाले चक्रवृद्धि ब्याज (Compound Interest) के आधार पर रिटायरमेंट का कुल फंड दिखता है।</p>
+        </div>
+    </div>
+
+    <!-- 3. Leave Encashment & Gratuity Calculator -->
     <div id="leave" class="calculator-section">
         <div class="section-title">🏖️ अवकाश नगदीकरण (Leave Encashment)</div>
         <div class="form-group">
@@ -319,7 +355,7 @@
         </div>
         <div class="form-group">
             <label>रिटायरमेंट की तारीख (Retirement Date):</label>
-            <input type="date" id="retireDate" value="2029-01-01" onchange="calcLeaveAndGratuity()">
+            <input type="date" id="retireDate" value="2045-01-01" onchange="calcLeaveAndGratuity()">
         </div>
         <div class="sub-val" style="margin-bottom: 8px;">कुल सेवा अवधि: <span id="serviceYearsText">0 वर्ष</span></div>
 
@@ -330,12 +366,12 @@
 
         <div class="rules-card">
             <h5>📖 रिटायरमेंट नियम (Retirement Rules)</h5>
-            <p><b>Leave Encashment:</b> Calculated on Last Drawn (Basic + DA) for max 300 days based on a 30-day month. (यदि छुट्टियां शून्य होंगी तो राशि शून्य आएगी।)</p>
-            <p><b>Gratuity Formula:</b> (Last Basic + DA) × 15/26 × Years of Service. (यह दोनों लाभ अलग-अलग मिलते हैं, आपस में जुड़ते नहीं हैं।)</p>
+            <p><b>Leave Encashment:</b> Calculated on Last Drawn (Basic + DA) for max 300 days.</p>
+            <p><b>Gratuity Formula:</b> (Last Basic + DA) × 15/26 × Years of Service.</p>
         </div>
     </div>
 
-    <!-- 3. Loan EMI Calculator -->
+    <!-- 4. Loan EMI Calculator -->
     <div id="emi" class="calculator-section">
         <div class="form-group">
             <label>लोन की कुल रकम (₹):</label>
@@ -361,7 +397,7 @@
         </div>
     </div>
 
-    <!-- 4. FD Calculator -->
+    <!-- 5. FD Calculator -->
     <div id="fd" class="calculator-section">
         <div class="form-group">
             <label>निवेश राशि (Principal ₹):</label>
@@ -387,7 +423,7 @@
         </div>
     </div>
 
-    <!-- 5. SIP Calculator -->
+    <!-- 6. SIP Calculator -->
     <div id="sip" class="calculator-section">
         <div class="form-group">
             <label>मासिक बचत / SIP (₹):</label>
@@ -412,17 +448,10 @@
         </div>
     </div>
 
-    <!-- 6. PPF / NPS Calculator & Rules -->
+    <!-- 7. PPF Calculator & Rules -->
     <div id="ppf" class="calculator-section">
         <div class="form-group">
-            <label>योजना चुनें (Select Scheme):</label>
-            <select id="ppfScheme" onchange="calcPPF()">
-                <option value="ppf" selected>PPF (Public Provident Fund)</option>
-                <option value="nps">NPS (National Pension System)</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>वार्षिक / मासिक निवेश (₹):</label>
+            <label>वार्षिक निवेश (₹):</label>
             <input type="number" id="ppfAmount" value="150000" oninput="calcPPF()">
         </div>
         <div class="form-group">
@@ -435,7 +464,7 @@
         </div>
 
         <div class="result-box">
-            <h4>PPF / NPS रिटर्न विवरण</h4>
+            <h4>PPF रिटर्न विवरण</h4>
             <div class="result-row"><span>कुल निवेश (Invested):</span> <span id="ppfInvested">₹0</span></div>
             <div class="result-row"><span>कुल ब्याज (Interest):</span> <span id="ppfInterest">₹0</span></div>
             <div class="result-row result-total"><span>कुल मेच्योरिटी वैल्यू:</span> <span id="ppfResult">₹0</span></div>
@@ -443,12 +472,11 @@
 
         <div class="rules-card">
             <h5>📖 नियम और जानकारी (Rules & Info)</h5>
-            <p><b>PPF:</b> Lock-in period is 15 years. Tax-free returns under Section 80C. (लॉक-इन अवधि 15 साल है। धारा 80C के तहत टैक्स फ्री रिटर्न मिलता है।)</p>
-            <p><b>NPS:</b> Retirement-focused scheme with equity/debt mix. Partial withdrawal allowed after 3 years. (यह रिटायरमेंट योजना है। 3 साल बाद आंशिक निकासी संभव है।)</p>
+            <p><b>PPF:</b> Lock-in period is 15 years. Tax-free returns under Section 80C.</p>
         </div>
     </div>
 
-    <!-- 7. Sukanya Samriddhi Yojana (SSY) Calculator & Rules -->
+    <!-- 8. Sukanya Samriddhi Yojana (SSY) Calculator & Rules -->
     <div id="ssy" class="calculator-section">
         <div class="form-group">
             <label>वार्षिक निवेश (Annual Deposit ₹):</label>
@@ -472,8 +500,7 @@
 
         <div class="rules-card">
             <h5>📖 सुकन्या नियम (SSY Rules)</h5>
-            <p><b>English:</b> Account can be opened for a girl child below 10 years. Deposit allowed up to 15 years. Maturity is 21 years from opening.</p>
-            <p><b>हिन्दी:</b> 10 साल से कम उम्र की बेटी का खाता खुलता है। 15 साल तक पैसे जमा होते हैं। खाता खोलने से 21 साल पर मेच्योरिटी होती है।</p>
+            <p><b>हिन्दी:</b> 10 साल से कम उम्र की बेटी का खाता खुलता है। 15 साल तक पैसे जमा होते हैं। 21 साल पर मेच्योरिटी होती है।</p>
         </div>
     </div>
 </div>
@@ -520,6 +547,7 @@ window.onload = function() {
         document.getElementById('loanDed').value = localStorage.getItem('loanDed');
     }
     calcSalary();
+    calcNPSPlanner();
     calcLeaveAndGratuity();
     calcEMI();
     calcFD();
@@ -565,6 +593,32 @@ function calcSalary() {
     document.getElementById('resNet').innerText = '₹ ' + Math.round(net);
 }
 
+function calcNPSPlanner() {
+    let baseMonthly = parseFloat(document.getElementById('npsBaseMonthly').value) || 0;
+    let contribPercent = parseFloat(document.getElementById('npsContribPercent').value) || 0;
+    let annualRate = parseFloat(document.getElementById('npsReturnRate').value) / 100 || 0;
+    let yearsLeft = parseFloat(document.getElementById('npsYearsLeft').value) || 0;
+
+    let monthlyDep = (baseMonthly * contribPercent) / 100;
+    document.getElementById('npsMonthlyDep').innerText = '₹ ' + Math.round(monthlyDep);
+
+    let totalMonths = yearsLeft * 12;
+    let monthlyRate = annualRate / 12;
+    let totalInvested = monthlyDep * totalMonths;
+
+    let corpus = 0;
+    for(let i = 0; i < totalMonths; i++) {
+        corpus = (corpus + monthlyDep) * (1 + monthlyRate);
+    }
+    if(isNaN(corpus) || corpus < 0) corpus = totalInvested;
+
+    let totalReturns = corpus - totalInvested;
+
+    document.getElementById('npsTotalInv').innerText = '₹ ' + Math.round(totalInvested);
+    document.getElementById('npsTotalRet').innerText = '₹ ' + Math.round(totalReturns);
+    document.getElementById('npsCorpusTotal').innerText = '₹ ' + Math.round(corpus);
+}
+
 function calcLeaveAndGratuity() {
     let basic = parseFloat(document.getElementById('leaveBasic').value) || 0;
     let da = parseFloat(document.getElementById('leaveDa').value) || 0;
@@ -579,7 +633,6 @@ function calcLeaveAndGratuity() {
     document.getElementById('leavePerDay').innerText = '₹ ' + Math.round(perDay);
     document.getElementById('leaveTotal').innerText = '₹ ' + Math.round(totalEncashment);
 
-    // Calculate Service Years from Dates
     let jDate = new Date(document.getElementById('joinDate').value);
     let rDate = new Date(document.getElementById('retireDate').value);
     
@@ -590,7 +643,6 @@ function calcLeaveAndGratuity() {
 
     document.getElementById('serviceYearsText').innerText = serviceYears.toFixed(1) + ' वर्ष (Years)';
 
-    // Gratuity Calculation Formula: (Basic + DA) * (15 / 26) * Years of Service
     let gratuity = totalMonthly * (15 / 26) * serviceYears;
     if(gratuity < 0) gratuity = 0;
 
