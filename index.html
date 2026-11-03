@@ -96,6 +96,11 @@
             background-color: #fff;
             box-shadow: 0 0 8px rgba(0,176,155,0.2);
         }
+        input[readonly] {
+            background-color: #e9ecef;
+            color: #495057;
+            cursor: not-allowed;
+        }
         .section-title {
             font-size: 13px;
             color: #ffffff;
@@ -343,7 +348,7 @@
         </div>
     </div>
 
-    <!-- 3. Income Tax Calculator (Old vs New) -->
+    <!-- 3. Income Tax Calculator (Old vs New) - Fixed & Detailed -->
     <div id="tax" class="calculator-section">
         <div class="section-title">📊 आयकर गणना (Old vs New Tax Regime)</div>
         <div class="form-group">
@@ -351,16 +356,16 @@
             <input type="number" id="taxAnnualSalary" value="1200000" oninput="calcTax()">
         </div>
         <div class="form-group">
-            <label>स्टैंडर्ड डिडक्शन (Standard Deduction ₹):</label>
-            <input type="number" id="taxStdDed" value="75000" oninput="calcTax()">
+            <label>स्टैंडर्ड डिडक्शन (Standard Deduction ₹ - Fixed):</label>
+            <input type="number" id="taxStdDed" value="75000" readonly>
         </div>
         <div class="form-group">
-            <label>80C छूट (PPF, LIC, EPF - Max ₹1.5 Lakh):</label>
-            <input type="number" id="tax80C" value="150000" oninput="calcTax()">
+            <label>80C छूट (PPF, LIC, EPF - Max ₹1.5 Lakh Locked):</label>
+            <input type="number" id="tax80C" value="150000" readonly>
         </div>
         <div class="form-group">
-            <label>80CCD(1B) NPS छूट (Max ₹50,000):</label>
-            <input type="number" id="taxNpsExtra" value="50000" oninput="calcTax()">
+            <label>80CCD(1B) NPS छूट (Max ₹50,000 Locked):</label>
+            <input type="number" id="taxNpsExtra" value="50000" readonly>
         </div>
         <div class="form-group">
             <label>अन्य छूट (HRA, Home Loan Interest ₹):</label>
@@ -368,15 +373,12 @@
         </div>
 
         <div class="result-box">
-            <h4>टैक्स तुलना परिणाम</h4>
-            <div class="result-row"><span>पुरानी व्यवस्था (Old Regime Tax):</span> <span id="taxOldResult">₹0</span></div>
-            <div class="result-row"><span>नयी व्यवस्था (New Regime Tax):</span> <span id="taxNewResult">₹0</span></div>
-            <div class="result-row result-total result-net"><span>आपके लिए बेहतर विकल्प:</span> <span id="taxBestOption" style="color:#d81b60;">-</span></div>
-        </div>
-
-        <div class="rules-card">
-            <h5>📖 टैक्स सुझाव (Tip)</h5>
-            <p>New Tax Regime mein exemptions kam hoti hain lekin slab rates kam hote hain. Jabki Old Regime mein 80C, NPS aur Home Loan exemptions se tax bachat hoti hai.</p>
+            <h4>टैक्स तुलना एवं प्रभावी दर (Tax Rate & Summary)</h4>
+            <div class="result-row"><span>पुरानी व्यवस्था Tax (Old Tax):</span> <span id="taxOldResult">₹0</span></div>
+            <div class="result-row"><span>पुरानी व्यवस्था Effective Rate:</span> <span id="taxOldRate">0%</span></div>
+            <div class="result-row"><span>नयी व्यवस्था Tax (New Tax):</span> <span id="taxNewResult">₹0</span></div>
+            <div class="result-row"><span>नयी व्यवस्था Effective Rate:</span> <span id="taxNewRate">0%</span></div>
+            <div class="result-row result-total result-net"><span>सबसे बेहतर विकल्प:</span> <span id="taxBestOption" style="color:#d81b60;">-</span></div>
         </div>
     </div>
 
@@ -410,11 +412,6 @@
             <div class="result-row"><span>कुल ग्रॉस एरियर (Gross Arrear):</span> <span id="arrGrossTotal">₹0</span></div>
             <div class="result-row"><span>NPS कटौती (Deduction):</span> <span id="arrNpsTotal">₹0</span></div>
             <div class="result-row result-total result-net"><span>खाते में आने वाला नेट एरियर:</span> <span id="arrNetTotal">₹0</span></div>
-        </div>
-
-        <div class="rules-card">
-            <h5>📖 एरियर नियम (Arrear Rule)</h5>
-            <p>Jab DA 3% ya 4% badhta hai, toh pichhle mahino ka bakaaya milta hai. Naye DA aur Purane DA ka antar nikal kar mahino se guna kiya jata hai, aur NPS kata jata hai.</p>
         </div>
     </div>
 
@@ -515,11 +512,6 @@
             <div class="result-row"><span>कुल जमा राशि (15 साल तक):</span> <span id="ssyInvested">₹0</span></div>
             <div class="result-row"><span>कुल ब्याज (Interest Earned):</span> <span id="ssyInterest">₹0</span></div>
             <div class="result-row result-total"><span>21 साल पर कुल रकम:</span> <span id="ssyResult">₹0</span></div>
-        </div>
-
-        <div class="rules-card">
-            <h5>📖 सुकन्या नियम (SSY Rules)</h5>
-            <p>10 साल से कम उम्र की बेटी का खाता खुलता है। 15 साल तक पैसे जमा होते हैं। 21 साल पर मेच्योरिटी होती है।</p>
         </div>
     </div>
 </div>
@@ -682,52 +674,52 @@ function calcNPSPlanner() {
 
 function calcTax() {
     let gross = parseFloat(document.getElementById('taxAnnualSalary').value) || 0;
-    let stdDed = parseFloat(document.getElementById('taxStdDed').value) || 0;
-    let c80 = parseFloat(document.getElementById('tax80C').value) || 0;
-    if(c80 > 150000) c80 = 150000;
-    let npsEx = parseFloat(document.getElementById('taxNpsExtra').value) || 0;
-    if(npsEx > 50000) npsEx = 50000;
+    let stdDed = 75000;
+    let c80 = 150000; // Locked max limit
+    let npsEx = 50000; // Locked max limit
     let other = parseFloat(document.getElementById('taxOtherDed').value) || 0;
 
-    // --- OLD REGIME CALCULATION ---
+    // --- OLD REGIME ---
     let taxableOld = gross - (stdDed + c80 + npsEx + other);
     if(taxableOld < 0) taxableOld = 0;
     let taxOld = 0;
 
-    if(taxableOld <= 500000) {
-        taxOld = 0; // Rebate 87A up to 5 Lakh
-    } else {
+    if(taxableOld > 500000) {
         if(taxableOld > 250000) taxOld += (Math.min(taxableOld, 500000) - 250000) * 0.05;
         if(taxableOld > 500000) taxOld += (Math.min(taxableOld, 1000000) - 500000) * 0.20;
         if(taxableOld > 1000000) taxOld += (taxableOld - 1000000) * 0.30;
-        taxOld += taxOld * 0.04; // Cess
+        taxOld += taxOld * 0.04;
     }
 
-    // --- NEW REGIME CALCULATION ---
-    let taxableNew = gross - stdDed; // Standard deduction only
+    let rateOld = gross > 0 ? ((taxOld / gross) * 100).toFixed(1) : 0;
+
+    // --- NEW REGIME ---
+    let taxableNew = gross - stdDed;
     if(taxableNew < 0) taxableNew = 0;
     let taxNew = 0;
 
-    if(taxableNew <= 700000) {
-        taxNew = 0; // Rebate 87A up to 7 Lakh
-    } else {
+    if(taxableNew > 700000) {
         if(taxableNew > 300000) taxNew += (Math.min(taxableNew, 700000) - 300000) * 0.05;
         if(taxableNew > 700000) taxNew += (Math.min(taxableNew, 1000000) - 700000) * 0.10;
         if(taxableNew > 1000000) taxNew += (Math.min(taxableNew, 1200000) - 1000000) * 0.15;
         if(taxableNew > 1200000) taxNew += (Math.min(taxableNew, 1500000) - 1200000) * 0.20;
         if(taxableNew > 1500000) taxNew += (taxableNew - 1500000) * 0.30;
-        taxNew += taxNew * 0.04; // Cess
+        taxNew += taxNew * 0.04;
     }
 
+    let rateNew = gross > 0 ? ((taxNew / gross) * 100).toFixed(1) : 0;
+
     document.getElementById('taxOldResult').innerText = '₹ ' + Math.round(taxOld);
+    document.getElementById('taxOldRate').innerText = rateOld + '%';
     document.getElementById('taxNewResult').innerText = '₹ ' + Math.round(taxNew);
+    document.getElementById('taxNewRate').innerText = rateNew + '%';
 
     if(taxOld < taxNew) {
-        document.getElementById('taxBestOption').innerText = 'Old Tax Regime (₹ ' + Math.round(taxNew - taxOld) + ' bachat)';
+        document.getElementById('taxBestOption').innerText = 'Old Regime (₹ ' + Math.round(taxNew - taxOld) + ' bachat)';
     } else if(taxNew < taxOld) {
-        document.getElementById('taxBestOption').innerText = 'New Tax Regime (₹ ' + Math.round(taxOld - taxNew) + ' bachat)';
+        document.getElementById('taxBestOption').innerText = 'New Regime (₹ ' + Math.round(taxOld - taxNew) + ' bachat)';
     } else {
-        document.getElementById('taxBestOption').innerText = 'Dono Regime barabar hain';
+        document.getElementById('taxBestOption').innerText = 'Dono Barabar hain';
     }
 }
 
