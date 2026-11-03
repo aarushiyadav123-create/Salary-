@@ -32,19 +32,20 @@
         }
         .tabs {
             display: flex;
-            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 4px;
             background: #e8f0fe;
             border-radius: 10px;
             padding: 5px;
             margin-bottom: 20px;
         }
         .tab-btn {
-            flex: 1;
-            padding: 9px 4px;
+            flex: 1 1 30%;
+            padding: 8px 4px;
             border: none;
             background: transparent;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: bold;
             color: #555;
             border-radius: 8px;
@@ -156,6 +157,20 @@
             font-weight: bold;
             color: #2e7d32;
         }
+        .rules-card {
+            background: #fff8e1;
+            border: 1px solid #ffe082;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 15px;
+            font-size: 12px;
+            color: #5d4037;
+        }
+        .rules-card h5 {
+            margin: 0 0 5px 0;
+            color: #f57f17;
+            font-size: 13px;
+        }
     </style>
 </head>
 <body>
@@ -168,6 +183,8 @@
         <button class="tab-btn" onclick="switchTab('emi')">लोन EMI</button>
         <button class="tab-btn" onclick="switchTab('fd')">एफडी (FD)</button>
         <button class="tab-btn" onclick="switchTab('sip')">बचत/SIP</button>
+        <button class="tab-btn" onclick="switchTab('ppf')">PPF/NPS</button>
+        <button class="tab-btn" onclick="switchTab('ssy')">सुकन्या (SSY)</button>
     </div>
 
     <!-- 1. Salary Calculator -->
@@ -326,6 +343,71 @@
             <div class="result-row result-total"><span>कुल फंड:</span> <span id="sipResult">₹0</span></div>
         </div>
     </div>
+
+    <!-- 5. PPF / NPS Calculator & Rules -->
+    <div id="ppf" class="calculator-section">
+        <div class="form-group">
+            <label>योजना चुनें (Select Scheme):</label>
+            <select id="ppfScheme" onchange="calcPPF()">
+                <option value="ppf" selected>PPF (Public Provident Fund)</option>
+                <option value="nps">NPS (National Pension System)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>वार्षिक / मासिक निवेश (₹):</label>
+            <input type="number" id="ppfAmount" value="150000" oninput="calcPPF()">
+        </div>
+        <div class="form-group">
+            <label>ब्याज दर (% वार्षिक अनुमानित):</label>
+            <input type="number" id="ppfRate" value="7.1" step="0.1" oninput="calcPPF()">
+        </div>
+        <div class="form-group">
+            <label>अवधि (Years - सालो में):</label>
+            <input type="number" id="ppfYears" value="15" oninput="calcPPF()">
+        </div>
+
+        <div class="result-box">
+            <h4>PPF / NPS रिटर्न विवरण</h4>
+            <div class="result-row"><span>कुल निवेश (Invested):</span> <span id="ppfInvested">₹0</span></div>
+            <div class="result-row"><span>कुल ब्याज (Interest):</span> <span id="ppfInterest">₹0</span></div>
+            <div class="result-row result-total"><span>कुल मेच्योरिटी वैल्यू:</span> <span id="ppfResult">₹0</span></div>
+        </div>
+
+        <div class="rules-card">
+            <h5>📖 नियम और जानकारी (Rules & Info)</h5>
+            <p><b>PPF:</b> Lock-in period is 15 years. Tax-free returns under Section 80C. (लॉक-इन अवधि 15 साल है। धारा 80C के तहत टैक्स फ्री रिटर्न मिलता है।)</p>
+            <p><b>NPS:</b> Retirement-focused scheme with equity/debt mix. Partial withdrawal allowed after 3 years. (यह रिटायरमेंट योजना है। 3 साल बाद आंशिक निकासी संभव है।)</p>
+        </div>
+    </div>
+
+    <!-- 6. Sukanya Samriddhi Yojana (SSY) Calculator & Rules -->
+    <div id="ssy" class="calculator-section">
+        <div class="form-group">
+            <label>वार्षिक निवेश (Annual Deposit ₹):</label>
+            <input type="number" id="ssyAmount" value="100000" oninput="calcSSY()">
+        </div>
+        <div class="form-group">
+            <label>ब्याज दर (% वार्षिक):</label>
+            <input type="number" id="ssyRate" value="8.2" step="0.1" oninput="calcSSY()">
+        </div>
+        <div class="form-group">
+            <label>बेटी की आयु (Girl's Age in Years):</label>
+            <input type="number" id="ssyAge" value="5" oninput="calcSSY()">
+        </div>
+
+        <div class="result-box">
+            <h4>सुकन्या समृद्ध योजना विवरण (21 साल पर)</h4>
+            <div class="result-row"><span>कुल जमा राशि (15 साल तक):</span> <span id="ssyInvested">₹0</span></div>
+            <div class="result-row"><span>कुल ब्याज (Interest Earned):</span> <span id="ssyInterest">₹0</span></div>
+            <div class="result-row result-total"><span>21 साल पर कुल रकम:</span> <span id="ssyResult">₹0</span></div>
+        </div>
+
+        <div class="rules-card">
+            <h5>📖 सुकन्या नियम (SSY Rules)</h5>
+            <p><b>English:</b> Account can be opened for a girl child below 10 years. Deposit allowed up to 15 years. Maturity is 21 years from opening.</p>
+            <p><b>हिन्दी:</b> 10 साल से कम उम्र की बेटी का खाता खुलता है। 15 साल तक पैसे जमा होते हैं। खाता खोलने से 21 साल पर मेच्योरिटी होती है।</p>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -339,13 +421,11 @@ function switchTab(tabId) {
 function calcSalary() {
     let basic = parseFloat(document.getElementById('basicSalary').value) || 0;
     
-    // DA calculation
     let daVal = parseFloat(document.getElementById('daInput').value) || 0;
     let daType = document.getElementById('daType').value;
     let daAmount = (daType === 'percent') ? (basic * daVal) / 100 : daVal;
     document.getElementById('calculatedDaVal').innerText = '₹ ' + Math.round(daAmount);
 
-    // Special Allowance calculation
     let spVal = parseFloat(document.getElementById('spInput').value) || 0;
     let spType = document.getElementById('spType').value;
     let spAmount = (spType === 'percent') ? (basic * spVal) / 100 : spVal;
@@ -353,13 +433,11 @@ function calcSalary() {
 
     let other = parseFloat(document.getElementById('otherAllow').value) || 0;
 
-    // NPS calculation
     let npsVal = parseFloat(document.getElementById('npsInput').value) || 0;
     let npsType = document.getElementById('npsType').value;
     let npsAmount = (npsType === 'percent') ? (basic * npsVal) / 100 : npsVal;
     document.getElementById('calculatedNpsVal').innerText = '₹ ' + Math.round(npsAmount);
 
-    // Tax calculation
     let taxVal = parseFloat(document.getElementById('taxInput').value) || 0;
     let taxType = document.getElementById('taxType').value;
     let taxAmount = (taxType === 'percent') ? (basic * taxVal) / 100 : taxVal;
@@ -434,10 +512,53 @@ function calcSIP() {
     document.getElementById('sipResult').innerText = '₹ ' + Math.round(fv);
 }
 
+function calcPPF() {
+    let p = parseFloat(document.getElementById('ppfAmount').value) || 0;
+    let r = parseFloat(document.getElementById('ppfRate').value) / 100 || 0;
+    let n = parseInt(document.getElementById('ppfYears').value) || 15;
+
+    let totalInvested = p * n;
+    let balance = 0;
+    for(let i = 0; i < n; i++) {
+        balance = (balance + p) * (1 + r);
+    }
+    let interest = balance - totalInvested;
+    if(balance < 0) balance = 0;
+
+    document.getElementById('ppfInvested').innerText = '₹ ' + Math.round(totalInvested);
+    document.getElementById('ppfInterest').innerText = '₹ ' + Math.round(interest);
+    document.getElementById('ppfResult').innerText = '₹ ' + Math.round(balance);
+}
+
+function calcSSY() {
+    let p = parseFloat(document.getElementById('ssyAmount').value) || 0;
+    let r = parseFloat(document.getElementById('ssyRate').value) / 100 || 0;
+    let age = parseFloat(document.getElementById('ssyAge').value) || 0;
+
+    let depositYears = 15;
+    let totalMaturityYears = 21;
+    let totalInvested = p * depositYears;
+
+    let balance = 0;
+    for(let i = 1; i <= totalMaturityYears; i++) {
+        if(i <= depositYears) {
+            balance += p;
+        }
+        balance += balance * r;
+    }
+    let interest = balance - totalInvested;
+
+    document.getElementById('ssyInvested').innerText = '₹ ' + Math.round(totalInvested);
+    document.getElementById('ssyInterest').innerText = '₹ ' + Math.round(interest);
+    document.getElementById('ssyResult').innerText = '₹ ' + Math.round(balance);
+}
+
 calcSalary();
 calcEMI();
 calcFD();
 calcSIP();
+calcPPF();
+calcSSY();
 </script>
 
 </body>
