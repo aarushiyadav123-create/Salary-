@@ -139,17 +139,24 @@
     <div id="salary" class="calculator-section active">
         <div class="form-group">
             <label>पैतृक दिन (Paid Days):</label>
-            <input type="number" id="paidDays" value="31" oninput="calcSalary()">
+            <input type="number" id="paidDays" value="31">
         </div>
 
         <div class="section-title">आय (Earnings)</div>
         <div class="form-group">
             <label>मूल वेतन (Basic Salary ₹):</label>
-            <input type="number" id="basicSalary" value="64820" oninput="calcSalary()">
+            <input type="number" id="basicSalary" value="67160" oninput="onBasicChange()">
         </div>
         <div class="form-group">
-            <label>महंगाई भत्ता (DA ₹ या %):</label>
-            <input type="number" id="daAllow" value="18039" oninput="calcSalary()">
+            <label>महंगाई भत्ता (DA % या Amount): <span style="font-size:11px; color:#666;">(percentage likhein jaise 28 ya seedha amount)</span></label>
+            <div class="tenure-group">
+                <input type="number" id="daInput" value="28.5" step="0.1" oninput="calcSalary()">
+                <select id="daType" onchange="calcSalary()">
+                    <option value="percent" selected>% (प्रतिशत)</option>
+                    <option value="amount">₹ (रकम)</option>
+                </select>
+            </div>
+            <div style="font-size: 12px; color: #1a73e8; margin-top: 3px;">बना हुआ DA: <span id="calculatedDaVal">₹0</span></div>
         </div>
         <div class="form-group">
             <label>विशेष भत्ता (Sp. Allowance ₹):</label>
@@ -277,9 +284,24 @@ function switchTab(tabId) {
     event.currentTarget.classList.add('active');
 }
 
+function onBasicChange() {
+    // Agar basic change ho, toh agar DA percentage me hai toh automatic adjust ho jayega
+    calcSalary();
+}
+
 function calcSalary() {
     let basic = parseFloat(document.getElementById('basicSalary').value) || 0;
-    let da = parseFloat(document.getElementById('daAllow').value) || 0;
+    let daInputVal = parseFloat(document.getElementById('daInput').value) || 0;
+    let daType = document.getElementById('daType').value;
+    
+    let daAmount = 0;
+    if (daType === 'percent') {
+        daAmount = (basic * daInputVal) / 100;
+    } else {
+        daAmount = daInputVal;
+    }
+    document.getElementById('calculatedDaVal').innerText = '₹ ' + Math.round(daAmount);
+
     let sp = parseFloat(document.getElementById('spAllow').value) || 0;
     let other = parseFloat(document.getElementById('otherAllow').value) || 0;
 
@@ -287,7 +309,7 @@ function calcSalary() {
     let tax = parseFloat(document.getElementById('taxDed').value) || 0;
     let loan = parseFloat(document.getElementById('loanDed').value) || 0;
 
-    let gross = basic + da + sp + other;
+    let gross = basic + daAmount + sp + other;
     let totalDed = nps + tax + loan;
     let net = gross - totalDed;
     if(net < 0) net = 0;
@@ -329,7 +351,7 @@ function calcFD() {
 
     let tInYears = timeVal;
     if (unit === 'months') tInYears = timeVal / 12;
-    else if (unit === `days`) tInYears = timeVal / 365;
+    else if (unit === 'days') tInYears = timeVal / 365;
 
     let maturity = p * Math.pow((1 + r / 100), tInYears);
     let interest = maturity - p;
@@ -341,14 +363,14 @@ function calcFD() {
 
 function calcSIP() {
     let p = parseFloat(document.getElementById('sipAmount').value) || 0;
-    let annualRate = parseFloat(document.getElementById('sipRate').value) || 0;
+    let annualRate = parseFloat(document.getElementById('sipRate').value) / 100 || 0;
     let timeVal = parseFloat(document.getElementById('sipTime').value) || 0;
     let unit = document.getElementById('sipUnit').value;
 
     let months = timeVal;
     if (unit === 'years') months = timeVal * 12;
 
-    let i = annualRate / 12 / 100;
+    let i = annualRate / 12;
     let invested = p * months;
     let fv = p * ((Math.pow(1 + i, months) - 1) / i) * (1 + i);
     if(isNaN(fv)) fv = invested;
