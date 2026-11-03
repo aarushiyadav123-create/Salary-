@@ -82,15 +82,18 @@
             margin: 15px 0 10px 0;
             font-weight: bold;
         }
-        .tenure-group {
+        .tenure-row {
             display: flex;
-            gap: 8px;
+            gap: 6px;
         }
-        .tenure-group input {
-            flex: 2;
-        }
-        .tenure-group select {
+        .tenure-field {
             flex: 1;
+            text-align: center;
+        }
+        .tenure-field label {
+            font-size: 11px;
+            color: #666;
+            margin-bottom: 2px;
         }
         .result-box {
             background: #f1f3f4;
@@ -129,13 +132,13 @@
     <h2>हिसाब-किताब टूल्स</h2>
     
     <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('salary')">वेतन पर्ची (Salary)</button>
+        <button class="tab-btn active" onclick="switchTab('salary')">वेतन पर्ची</button>
         <button class="tab-btn" onclick="switchTab('emi')">लोन EMI</button>
         <button class="tab-btn" onclick="switchTab('fd')">एफडी (FD)</button>
         <button class="tab-btn" onclick="switchTab('sip')">बचत/SIP</button>
     </div>
 
-    <!-- 1. Detailed Salary Slip Calculator -->
+    <!-- 1. Salary Calculator -->
     <div id="salary" class="calculator-section active">
         <div class="form-group">
             <label>पैतृक दिन (Paid Days):</label>
@@ -145,18 +148,18 @@
         <div class="section-title">आय (Earnings)</div>
         <div class="form-group">
             <label>मूल वेतन (Basic Salary ₹):</label>
-            <input type="number" id="basicSalary" value="67160" oninput="onBasicChange()">
+            <input type="number" id="basicSalary" value="67160" oninput="calcSalary()">
         </div>
         <div class="form-group">
-            <label>महंगाई भत्ता (DA % या Amount): <span style="font-size:11px; color:#666;">(percentage likhein jaise 28 ya seedha amount)</span></label>
-            <div class="tenure-group">
-                <input type="number" id="daInput" value="28.5" step="0.1" oninput="calcSalary()">
-                <select id="daType" onchange="calcSalary()">
+            <label>महंगाई भत्ता (DA % या Amount):</label>
+            <div style="display: flex; gap: 8px;">
+                <input type="number" id="daInput" value="28.5" step="0.1" oninput="calcSalary()" style="flex: 2;">
+                <select id="daType" onchange="calcSalary()" style="flex: 1;">
                     <option value="percent" selected>% (प्रतिशत)</option>
                     <option value="amount">₹ (रकम)</option>
                 </select>
             </div>
-            <div style="font-size: 12px; color: #1a73e8; margin-top: 3px;">बना हुआ DA: <span id="calculatedDaVal">₹0</span></div>
+            <div style="font-size: 12px; color: #1a73e8; margin-top: 4px;">बना हुआ DA: <span id="calculatedDaVal">₹0</span></div>
         </div>
         <div class="form-group">
             <label>विशेष भत्ता (Sp. Allowance ₹):</label>
@@ -182,32 +185,38 @@
         </div>
 
         <div class="result-box">
-            <h4>वेतन पर्ची का सारांश (Salary Summary)</h4>
+            <h4>वेतन पर्ची का सारांश</h4>
             <div class="result-row"><span>कुल आय (Gross Earnings):</span> <span id="resGross">₹0</span></div>
             <div class="result-row"><span>कुल कटौती (Total Deductions):</span> <span id="resDed">₹0</span></div>
             <div class="result-row result-total"><span>शुद्ध वेतन (Net In-Hand Salary):</span> <span id="resNet">₹0</span></div>
         </div>
     </div>
 
-    <!-- 2. Loan EMI Calculator -->
+    <!-- 2. Loan EMI Calculator (Years, Months, Days) -->
     <div id="emi" class="calculator-section">
         <div class="form-group">
             <label>लोन की कुल रकम (₹):</label>
-            <input type="number" id="emiAmount" value="100000" oninput="calcEMI()">
+            <input type="number" id="emiAmount" value="1073000" oninput="calcEMI()">
         </div>
         <div class="form-group">
             <label>ब्याज दर (% वार्षिक):</label>
-            <input type="number" id="emiRate" value="10" step="0.1" oninput="calcEMI()">
+            <input type="number" id="emiRate" value="5.5" step="0.01" oninput="calcEMI()">
         </div>
         <div class="form-group">
             <label>अवधि (Tenure):</label>
-            <div class="tenure-group">
-                <input type="number" id="emiTime" value="12" oninput="calcEMI()">
-                <select id="emiUnit" onchange="calcEMI()">
-                    <option value="months" selected>महीने</option>
-                    <option value="years">साल</option>
-                    <option value="days">दिन</option>
-                </select>
+            <div class="tenure-row">
+                <div class="tenure-field">
+                    <label>साल (Years)</label>
+                    <input type="number" id="emiYears" value="14" oninput="calcEMI()">
+                </div>
+                <div class="tenure-field">
+                    <label>महीने (Months)</label>
+                    <input type="number" id="emiMonths" value="2" oninput="calcEMI()">
+                </div>
+                <div class="tenure-field">
+                    <label>दिन (Days)</label>
+                    <input type="number" id="emiDays" value="12" oninput="calcEMI()">
+                </div>
             </div>
         </div>
         <div class="result-box">
@@ -218,7 +227,7 @@
         </div>
     </div>
 
-    <!-- 3. FD Calculator -->
+    <!-- 3. FD Calculator (Years, Months, Days) -->
     <div id="fd" class="calculator-section">
         <div class="form-group">
             <label>निवेश राशि (Principal ₹):</label>
@@ -230,13 +239,19 @@
         </div>
         <div class="form-group">
             <label>अवधि (Tenure):</label>
-            <div class="tenure-group">
-                <input type="number" id="fdTime" value="3" oninput="calcFD()">
-                <select id="fdUnit" onchange="calcFD()">
-                    <option value="years" selected>साल</option>
-                    <option value="months">महीने</option>
-                    <option value="days">दिन</option>
-                </select>
+            <div class="tenure-row">
+                <div class="tenure-field">
+                    <label>साल (Years)</label>
+                    <input type="number" id="fdYears" value="3" oninput="calcFD()">
+                </div>
+                <div class="tenure-field">
+                    <label>महीने (Months)</label>
+                    <input type="number" id="fdMonths" value="0" oninput="calcFD()">
+                </div>
+                <div class="tenure-field">
+                    <label>दिन (Days)</label>
+                    <input type="number" id="fdDays" value="0" oninput="calcFD()">
+                </div>
             </div>
         </div>
         <div class="result-box">
@@ -247,7 +262,7 @@
         </div>
     </div>
 
-    <!-- 4. SIP Calculator -->
+    <!-- 4. SIP Calculator (Years, Months) -->
     <div id="sip" class="calculator-section">
         <div class="form-group">
             <label>मासिक बचत / SIP (₹):</label>
@@ -259,12 +274,15 @@
         </div>
         <div class="form-group">
             <label>अवधि (Tenure):</label>
-            <div class="tenure-group">
-                <input type="number" id="sipTime" value="5" oninput="calcSIP()">
-                <select id="sipUnit" onchange="calcSIP()">
-                    <option value="years" selected>साल</option>
-                    <option value="months">महीने</option>
-                </select>
+            <div class="tenure-row">
+                <div class="tenure-field">
+                    <label>साल (Years)</label>
+                    <input type="number" id="sipYears" value="5" oninput="calcSIP()">
+                </div>
+                <div class="tenure-field">
+                    <label>महीने (Months)</label>
+                    <input type="number" id="sipMonths" value="0" oninput="calcSIP()">
+                </div>
             </div>
         </div>
         <div class="result-box">
@@ -282,11 +300,6 @@ function switchTab(tabId) {
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
     document.getElementById(tabId).classList.add('active');
     event.currentTarget.classList.add('active');
-}
-
-function onBasicChange() {
-    // Agar basic change ho, toh agar DA percentage me hai toh automatic adjust ho jayega
-    calcSalary();
 }
 
 function calcSalary() {
@@ -322,20 +335,20 @@ function calcSalary() {
 function calcEMI() {
     let p = parseFloat(document.getElementById('emiAmount').value) || 0;
     let annualRate = parseFloat(document.getElementById('emiRate').value) || 0;
-    let timeVal = parseFloat(document.getElementById('emiTime').value) || 0;
-    let unit = document.getElementById('emiUnit').value;
     
-    let n = timeVal;
-    if (unit === 'years') n = timeVal * 12;
-    else if (unit === 'days') n = timeVal / 30;
+    let years = parseFloat(document.getElementById('emiYears').value) || 0;
+    let months = parseFloat(document.getElementById('emiMonths').value) || 0;
+    let days = parseFloat(document.getElementById('emiDays').value) || 0;
+    
+    let totalMonths = (years * 12) + months + (days / 30);
 
-    if(n <= 0 || p <= 0) return;
+    if(totalMonths <= 0 || p <= 0) return;
 
     let r = annualRate / 12 / 100;
-    let emi = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
-    if (isNaN(emi) || !isFinite(emi)) emi = p / n;
+    let emi = (p * r * Math.pow(1 + r, totalMonths)) / (Math.pow(1 + r, totalMonths) - 1);
+    if (isNaN(emi) || !isFinite(emi)) emi = p / totalMonths;
 
-    let totalPay = emi * n;
+    let totalPay = emi * totalMonths;
     let totalInterest = totalPay - p;
 
     document.getElementById('emiMonthly').innerText = '₹ ' + Math.round(emi);
@@ -346,12 +359,12 @@ function calcEMI() {
 function calcFD() {
     let p = parseFloat(document.getElementById('fdPrincipal').value) || 0;
     let r = parseFloat(document.getElementById('fdRate').value) || 0;
-    let timeVal = parseFloat(document.getElementById('fdTime').value) || 0;
-    let unit = document.getElementById('fdUnit').value;
-
-    let tInYears = timeVal;
-    if (unit === 'months') tInYears = timeVal / 12;
-    else if (unit === 'days') tInYears = timeVal / 365;
+    
+    let years = parseFloat(document.getElementById('fdYears').value) || 0;
+    let months = parseFloat(document.getElementById('fdMonths').value) || 0;
+    let days = parseFloat(document.getElementById('fdDays').value) || 0;
+    
+    let tInYears = years + (months / 12) + (days / 365);
 
     let maturity = p * Math.pow((1 + r / 100), tInYears);
     let interest = maturity - p;
@@ -364,15 +377,15 @@ function calcFD() {
 function calcSIP() {
     let p = parseFloat(document.getElementById('sipAmount').value) || 0;
     let annualRate = parseFloat(document.getElementById('sipRate').value) / 100 || 0;
-    let timeVal = parseFloat(document.getElementById('sipTime').value) || 0;
-    let unit = document.getElementById('sipUnit').value;
-
-    let months = timeVal;
-    if (unit === 'years') months = timeVal * 12;
+    
+    let years = parseFloat(document.getElementById('sipYears').value) || 0;
+    let months = parseFloat(document.getElementById('sipMonths').value) || 0;
+    
+    let totalMonths = (years * 12) + months;
 
     let i = annualRate / 12;
-    let invested = p * months;
-    let fv = p * ((Math.pow(1 + i, months) - 1) / i) * (1 + i);
+    let invested = p * totalMonths;
+    let fv = (totalMonths > 0 && i > 0) ? p * ((Math.pow(1 + i, totalMonths) - 1) / i) * (1 + i) : invested;
     if(isNaN(fv)) fv = invested;
 
     let returns = fv - invested;
