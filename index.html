@@ -26,7 +26,7 @@
             background: linear-gradient(135deg, #ff416c, #ff4b2b);
             padding: 14px;
             border-radius: 12px;
-            font-size: 21px;
+            font-size: 20px;
             margin-bottom: 20px;
             box-shadow: 0 4px 15px rgba(255,65,108,0.4);
             letter-spacing: 0.5px;
@@ -42,8 +42,8 @@
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
         }
         .tab-btn {
-            flex: 1 1 30%;
-            padding: 10px 4px;
+            flex: 1 1 28%;
+            padding: 9px 3px;
             border: none;
             background: transparent;
             cursor: pointer;
@@ -71,18 +71,18 @@
             to { opacity: 1; transform: translateY(0); }
         }
         .form-group {
-            margin-bottom: 14px;
+            margin-bottom: 12px;
         }
         label {
             display: block;
             font-size: 13px;
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
             color: #2c3e50;
         }
         input, select {
             width: 100%;
-            padding: 10px;
+            padding: 9px;
             border: 2px solid #e1e8ed;
             border-radius: 9px;
             box-sizing: border-box;
@@ -97,12 +97,12 @@
             box-shadow: 0 0 8px rgba(0,176,155,0.2);
         }
         .section-title {
-            font-size: 14px;
+            font-size: 13px;
             color: #ffffff;
             background: linear-gradient(135deg, #8e2de2, #4a00e0);
-            padding: 8px 12px;
+            padding: 7px 10px;
             border-radius: 8px;
-            margin: 18px 0 10px 0;
+            margin: 16px 0 10px 0;
             font-weight: bold;
             box-shadow: 0 3px 8px rgba(74,0,224,0.3);
         }
@@ -127,9 +127,9 @@
         }
         .result-box {
             background: linear-gradient(135deg, #e0f7fa, #80deea);
-            padding: 16px;
+            padding: 15px;
             border-radius: 14px;
-            margin-top: 18px;
+            margin-top: 16px;
             text-align: left;
             border-left: 6px solid #00acc1;
             box-shadow: 0 5px 15px rgba(0,172,193,0.2);
@@ -137,28 +137,28 @@
         .result-box h4 {
             margin: 0 0 10px 0;
             color: #006064;
-            font-size: 16px;
+            font-size: 15px;
             text-align: center;
             border-bottom: 1.5px dashed #b2ebf2;
-            padding-bottom: 6px;
+            padding-bottom: 5px;
         }
         .result-row {
             display: flex;
             justify-content: space-between;
-            font-size: 14px;
-            margin-bottom: 7px;
+            font-size: 13px;
+            margin-bottom: 6px;
             color: #263238;
         }
         .result-total {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: bold;
             color: #d81b60;
             border-top: 2px dashed #b2ebf2;
-            padding-top: 8px;
-            margin-top: 8px;
+            padding-top: 7px;
+            margin-top: 7px;
         }
         .result-net {
-            font-size: 17px;
+            font-size: 16px;
             font-weight: bold;
             color: #2e7d32;
         }
@@ -166,14 +166,14 @@
             background: #fff3e0;
             border: 1px solid #ffe0b2;
             border-radius: 10px;
-            padding: 12px;
-            margin-top: 16px;
+            padding: 10px;
+            margin-top: 14px;
             font-size: 12px;
             color: #e65100;
             box-shadow: 0 2px 6px rgba(255,152,0,0.1);
         }
         .rules-card h5 {
-            margin: 0 0 5px 0;
+            margin: 0 0 4px 0;
             color: #f57c00;
             font-size: 13px;
         }
@@ -184,10 +184,10 @@
             padding: 12px;
             width: 100%;
             border-radius: 10px;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 18px;
+            margin-top: 16px;
             box-shadow: 0 5px 15px rgba(241,39,17,0.4);
             transition: transform 0.2s;
         }
@@ -207,6 +207,8 @@
     <div class="tabs">
         <button class="tab-btn active" onclick="switchTab('salary', this)">वेतन पर्ची</button>
         <button class="tab-btn" onclick="switchTab('nps', this)">NPS प्लानर</button>
+        <button class="tab-btn" onclick="switchTab('tax', this)">आयकर (Tax)</button>
+        <button class="tab-btn" onclick="switchTab('arrear', this)">एरियर (Arrear)</button>
         <button class="tab-btn" onclick="switchTab('emi', this)">लोन EMI</button>
         <button class="tab-btn" onclick="switchTab('fd', this)">एफडी (FD)</button>
         <button class="tab-btn" onclick="switchTab('sip', this)">बचत/SIP</button>
@@ -292,16 +294,10 @@
             <div class="result-row result-total result-net"><span>शुद्ध वेतन (Net Salary):</span> <span id="resNet">₹0</span></div>
         </div>
 
-        <div class="rules-card">
-            <h5>📖 वेतन नियम (Salary Rules)</h5>
-            <p><b>Gross Salary:</b> Basic + DA + Special Allowance + Other Allowances.</p>
-            <p><b>Net Salary:</b> Gross Salary - (NPS + Income Tax + Loan/Other Deductions).</p>
-        </div>
-
         <button class="btn-pdf" onclick="window.print()">📥 PDF / Print रिपोर्ट डाउनलोड करें</button>
     </div>
 
-    <!-- 2. Advanced NPS Retirement & Withdrawal Planner -->
+    <!-- 2. NPS Planner -->
     <div id="nps" class="calculator-section">
         <div class="section-title">🛡️ NPS रिटायरमेंट, कॉर्पस और पेंशन प्लानर</div>
         <div class="form-group">
@@ -326,7 +322,7 @@
             <input type="number" id="npsReturnRate" value="8.5" step="0.5" oninput="calcNPSPlanner()">
         </div>
         <div class="form-group">
-            <label>आज की तारीख (Calculation Start Date):</label>
+            <label>आज की तारीख (Start Date):</label>
             <input type="date" id="npsStartDate" value="2026-11-04" onchange="calcNPSPlanner()">
         </div>
         <div class="form-group">
@@ -343,17 +339,86 @@
             <div class="result-row result-total"><span>कुल रिटायरमेंट फंड (Total Corpus):</span> <span id="npsCorpusTotal">₹0</span></div>
             <div class="result-row" style="margin-top: 8px; color: #0277bd; font-weight: bold;"><span>60% टैक्स-फ्री एकमुश्त (Lump-sum):</span> <span id="npsLumpSum">₹0</span></div>
             <div class="result-row" style="color: #4a148c; font-weight: bold;"><span>40% एन्युइटी (Pension Fund):</span> <span id="npsAnnuityFund">₹0</span></div>
-            <div class="result-row result-net" style="margin-top: 6px;"><span>अनुमानित मासिक पेंशन (Monthly Pension):</span> <span id="npsMonthlyPension">₹0</span></div>
-        </div>
-
-        <div class="rules-card">
-            <h5>📖 NPS निकासी और पेंशन नियम (Rules)</h5>
-            <p><b>Lump-sum & Pension:</b> Retirement par total corpus ka 60% paisa ek sath tax-free milta hai, aur baki 40% se pension (Annuity) shuru hoti hai.</p>
-            <p><b>हिन्दी:</b> कुल फंड का 60% हिस्सा एक साथ (Lump-sum) आपके खाते में आ जाता है (जिसपर कोई टैक्स नहीं लगता), और शेष 40% हिस्से से हर महीने की पेंशन तय होती है।</p>
+            <div class="result-row result-net" style="margin-top: 6px;"><span>अनुमानित मासिक पेंशन:</span> <span id="npsMonthlyPension">₹0</span></div>
         </div>
     </div>
 
-    <!-- 3. Loan EMI Calculator -->
+    <!-- 3. Income Tax Calculator (Old vs New) -->
+    <div id="tax" class="calculator-section">
+        <div class="section-title">📊 आयकर गणना (Old vs New Tax Regime)</div>
+        <div class="form-group">
+            <label>कुल वार्षिक सकल आय (Annual Gross Salary ₹):</label>
+            <input type="number" id="taxAnnualSalary" value="1200000" oninput="calcTax()">
+        </div>
+        <div class="form-group">
+            <label>स्टैंडर्ड डिडक्शन (Standard Deduction ₹):</label>
+            <input type="number" id="taxStdDed" value="75000" oninput="calcTax()">
+        </div>
+        <div class="form-group">
+            <label>80C छूट (PPF, LIC, EPF - Max ₹1.5 Lakh):</label>
+            <input type="number" id="tax80C" value="150000" oninput="calcTax()">
+        </div>
+        <div class="form-group">
+            <label>80CCD(1B) NPS छूट (Max ₹50,000):</label>
+            <input type="number" id="taxNpsExtra" value="50000" oninput="calcTax()">
+        </div>
+        <div class="form-group">
+            <label>अन्य छूट (HRA, Home Loan Interest ₹):</label>
+            <input type="number" id="taxOtherDed" value="50000" oninput="calcTax()">
+        </div>
+
+        <div class="result-box">
+            <h4>टैक्स तुलना परिणाम</h4>
+            <div class="result-row"><span>पुरानी व्यवस्था (Old Regime Tax):</span> <span id="taxOldResult">₹0</span></div>
+            <div class="result-row"><span>नयी व्यवस्था (New Regime Tax):</span> <span id="taxNewResult">₹0</span></div>
+            <div class="result-row result-total result-net"><span>आपके लिए बेहतर विकल्प:</span> <span id="taxBestOption" style="color:#d81b60;">-</span></div>
+        </div>
+
+        <div class="rules-card">
+            <h5>📖 टैक्स सुझाव (Tip)</h5>
+            <p>New Tax Regime mein exemptions kam hoti hain lekin slab rates kam hote hain. Jabki Old Regime mein 80C, NPS aur Home Loan exemptions se tax bachat hoti hai.</p>
+        </div>
+    </div>
+
+    <!-- 4. Arrear Calculator -->
+    <div id="arrear" class="calculator-section">
+        <div class="section-title">💰 DA / Salary एरियर कैलकुलेटर</div>
+        <div class="form-group">
+            <label>मासिक बेसिक सैलरी (Basic Salary ₹):</label>
+            <input type="number" id="arrBasic" value="67160" oninput="calcArrear()">
+        </div>
+        <div class="form-group">
+            <label>पुराना DA Rate (%):</label>
+            <input type="number" id="arrOldDa" value="50" step="0.5" oninput="calcArrear()">
+        </div>
+        <div class="form-group">
+            <label>नया DA Rate (%):</label>
+            <input type="number" id="arrNewDa" value="53" step="0.5" oninput="calcArrear()">
+        </div>
+        <div class="form-group">
+            <label>एरियर के कुल महीने (Months):</label>
+            <input type="number" id="arrMonths" value="3" oninput="calcArrear()">
+        </div>
+        <div class="form-group">
+            <label>NPS कटौती दर (%):</label>
+            <input type="number" id="arrNpsRate" value="10" oninput="calcArrear()">
+        </div>
+
+        <div class="result-box">
+            <h4>एरियर गणना विवरण</h4>
+            <div class="result-row"><span>प्रति माह DA का अंतर:</span> <span id="arrDiffPerMonth">₹0</span></div>
+            <div class="result-row"><span>कुल ग्रॉस एरियर (Gross Arrear):</span> <span id="arrGrossTotal">₹0</span></div>
+            <div class="result-row"><span>NPS कटौती (Deduction):</span> <span id="arrNpsTotal">₹0</span></div>
+            <div class="result-row result-total result-net"><span>खाते में आने वाला नेट एरियर:</span> <span id="arrNetTotal">₹0</span></div>
+        </div>
+
+        <div class="rules-card">
+            <h5>📖 एरियर नियम (Arrear Rule)</h5>
+            <p>Jab DA 3% ya 4% badhta hai, toh pichhle mahino ka bakaaya milta hai. Naye DA aur Purane DA ka antar nikal kar mahino se guna kiya jata hai, aur NPS kata jata hai.</p>
+        </div>
+    </div>
+
+    <!-- 5. Loan EMI Calculator -->
     <div id="emi" class="calculator-section">
         <div class="form-group">
             <label>लोन की कुल रकम (₹):</label>
@@ -379,7 +444,7 @@
         </div>
     </div>
 
-    <!-- 4. FD Calculator -->
+    <!-- 6. FD Calculator -->
     <div id="fd" class="calculator-section">
         <div class="form-group">
             <label>निवेश राशि (Principal ₹):</label>
@@ -405,7 +470,7 @@
         </div>
     </div>
 
-    <!-- 5. SIP Calculator -->
+    <!-- 7. SIP Calculator -->
     <div id="sip" class="calculator-section">
         <div class="form-group">
             <label>मासिक बचत / SIP (₹):</label>
@@ -430,7 +495,7 @@
         </div>
     </div>
 
-    <!-- 6. Sukanya Samriddhi Yojana (SSY) Calculator & Rules -->
+    <!-- 8. SSY Calculator -->
     <div id="ssy" class="calculator-section">
         <div class="form-group">
             <label>वार्षिक निवेश (Annual Deposit ₹):</label>
@@ -454,7 +519,7 @@
 
         <div class="rules-card">
             <h5>📖 सुकन्या नियम (SSY Rules)</h5>
-            <p><b>हिन्दी:</b> 10 साल से कम उम्र की बेटी का खाता खुलता है। 15 साल तक पैसे जमा होते हैं। 21 साल पर मेच्योरिटी होती है।</p>
+            <p>10 साल से कम उम्र की बेटी का खाता खुलता है। 15 साल तक पैसे जमा होते हैं। 21 साल पर मेच्योरिटी होती है।</p>
         </div>
     </div>
 </div>
@@ -471,7 +536,6 @@ function switchTab(tabId, btnElement) {
     localStorage.setItem('activeTab', tabId);
 }
 
-// Local Storage Save & Load
 function saveAndCalc() {
     localStorage.setItem('basicSalary', document.getElementById('basicSalary').value);
     localStorage.setItem('paidDays', document.getElementById('paidDays').value);
@@ -505,7 +569,6 @@ window.onload = function() {
         document.getElementById('loanDed').value = localStorage.getItem('loanDed');
     }
 
-    // Restore last active tab
     let savedTab = localStorage.getItem('activeTab');
     if(savedTab) {
         let targetBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick').includes(savedTab));
@@ -516,6 +579,8 @@ window.onload = function() {
 
     calcSalary();
     calcNPSPlanner();
+    calcTax();
+    calcArrear();
     calcEMI();
     calcFD();
     calcSIP();
@@ -613,6 +678,78 @@ function calcNPSPlanner() {
     document.getElementById('npsLumpSum').innerText = '₹ ' + Math.round(lumpSum);
     document.getElementById('npsAnnuityFund').innerText = '₹ ' + Math.round(annuityFund);
     document.getElementById('npsMonthlyPension').innerText = '₹ ' + Math.round(monthlyPension) + ' / महीना';
+}
+
+function calcTax() {
+    let gross = parseFloat(document.getElementById('taxAnnualSalary').value) || 0;
+    let stdDed = parseFloat(document.getElementById('taxStdDed').value) || 0;
+    let c80 = parseFloat(document.getElementById('tax80C').value) || 0;
+    if(c80 > 150000) c80 = 150000;
+    let npsEx = parseFloat(document.getElementById('taxNpsExtra').value) || 0;
+    if(npsEx > 50000) npsEx = 50000;
+    let other = parseFloat(document.getElementById('taxOtherDed').value) || 0;
+
+    // --- OLD REGIME CALCULATION ---
+    let taxableOld = gross - (stdDed + c80 + npsEx + other);
+    if(taxableOld < 0) taxableOld = 0;
+    let taxOld = 0;
+
+    if(taxableOld <= 500000) {
+        taxOld = 0; // Rebate 87A up to 5 Lakh
+    } else {
+        if(taxableOld > 250000) taxOld += (Math.min(taxableOld, 500000) - 250000) * 0.05;
+        if(taxableOld > 500000) taxOld += (Math.min(taxableOld, 1000000) - 500000) * 0.20;
+        if(taxableOld > 1000000) taxOld += (taxableOld - 1000000) * 0.30;
+        taxOld += taxOld * 0.04; // Cess
+    }
+
+    // --- NEW REGIME CALCULATION ---
+    let taxableNew = gross - stdDed; // Standard deduction only
+    if(taxableNew < 0) taxableNew = 0;
+    let taxNew = 0;
+
+    if(taxableNew <= 700000) {
+        taxNew = 0; // Rebate 87A up to 7 Lakh
+    } else {
+        if(taxableNew > 300000) taxNew += (Math.min(taxableNew, 700000) - 300000) * 0.05;
+        if(taxableNew > 700000) taxNew += (Math.min(taxableNew, 1000000) - 700000) * 0.10;
+        if(taxableNew > 1000000) taxNew += (Math.min(taxableNew, 1200000) - 1000000) * 0.15;
+        if(taxableNew > 1200000) taxNew += (Math.min(taxableNew, 1500000) - 1200000) * 0.20;
+        if(taxableNew > 1500000) taxNew += (taxableNew - 1500000) * 0.30;
+        taxNew += taxNew * 0.04; // Cess
+    }
+
+    document.getElementById('taxOldResult').innerText = '₹ ' + Math.round(taxOld);
+    document.getElementById('taxNewResult').innerText = '₹ ' + Math.round(taxNew);
+
+    if(taxOld < taxNew) {
+        document.getElementById('taxBestOption').innerText = 'Old Tax Regime (₹ ' + Math.round(taxNew - taxOld) + ' bachat)';
+    } else if(taxNew < taxOld) {
+        document.getElementById('taxBestOption').innerText = 'New Tax Regime (₹ ' + Math.round(taxOld - taxNew) + ' bachat)';
+    } else {
+        document.getElementById('taxBestOption').innerText = 'Dono Regime barabar hain';
+    }
+}
+
+function calcArrear() {
+    let basic = parseFloat(document.getElementById('arrBasic').value) || 0;
+    let oldDa = parseFloat(document.getElementById('arrOldDa').value) || 0;
+    let newDa = parseFloat(document.getElementById('arrNewDa').value) || 0;
+    let months = parseFloat(document.getElementById('arrMonths').value) || 0;
+    let npsRate = parseFloat(document.getElementById('arrNpsRate').value) || 0;
+
+    let daDiffPercent = newDa - oldDa;
+    if(daDiffPercent < 0) daDiffPercent = 0;
+
+    let diffPerMonth = (basic * daDiffPercent) / 100;
+    let grossArrear = diffPerMonth * months;
+    let npsDed = (grossArrear * npsRate) / 100;
+    let netArrear = grossArrear - npsDed;
+
+    document.getElementById('arrDiffPerMonth').innerText = '₹ ' + Math.round(diffPerMonth);
+    document.getElementById('arrGrossTotal').innerText = '₹ ' + Math.round(grossArrear);
+    document.getElementById('arrNpsTotal').innerText = '₹ ' + Math.round(npsDed);
+    document.getElementById('arrNetTotal').innerText = '₹ ' + Math.round(netArrear);
 }
 
 function calcEMI() {
