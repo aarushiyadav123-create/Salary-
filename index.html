@@ -194,7 +194,7 @@
     
     <div class="tabs">
         <button class="tab-btn active" onclick="switchTab('salary')">वेतन पर्ची</button>
-        <button class="tab-btn" onclick="switchTab('leave')">लीव एन्कैश</button>
+        <button class="tab-btn" onclick="switchTab('leave')">लीव व ग्रैच्युटी</button>
         <button class="tab-btn" onclick="switchTab('emi')">लोन EMI</button>
         <button class="tab-btn" onclick="switchTab('fd')">एफडी (FD)</button>
         <button class="tab-btn" onclick="switchTab('sip')">बचत/SIP</button>
@@ -281,34 +281,53 @@
             <div class="result-row result-total result-net"><span>शुद्ध वेतन (Net Salary):</span> <span id="resNet">₹0</span></div>
         </div>
 
+        <div class="rules-card">
+            <h5>📖 वेतन नियम (Salary Rules)</h5>
+            <p><b>Gross Salary:</b> Basic + DA + Special Allowance + Other Allowances.</p>
+            <p><b>Net Salary:</b> Gross Salary - (NPS + Income Tax + Loan/Other Deductions).</p>
+            <p><b>हिन्दी:</b> कुल आय में सभी भत्ते जुड़ते हैं और कटौतियाँ घटने के बाद नेट इन-हैंड सैलरी बनती है।</p>
+        </div>
+
         <button class="btn-pdf" onclick="window.print()">📥 PDF / Print रिपोर्ट डाउनलोड करें</button>
     </div>
 
-    <!-- 2. Leave Encashment Calculator -->
+    <!-- 2. Leave Encashment & Gratuity Calculator -->
     <div id="leave" class="calculator-section">
+        <div class="section-title">🏖️ अवकाश नगदीकरण (Leave Encashment)</div>
         <div class="form-group">
-            <label>मूल वेतन (Basic Salary ₹):</label>
-            <input type="number" id="leaveBasic" value="67160" oninput="calcLeave()">
+            <label>रिटायरमेंट के समय Basic Salary (₹):</label>
+            <input type="number" id="leaveBasic" value="67160" oninput="calcLeaveAndGratuity()">
         </div>
         <div class="form-group">
-            <label>महंगाई भत्ता (DA ₹):</label>
-            <input type="number" id="leaveDa" value="19141" oninput="calcLeave()">
+            <label>रिटायरमेंट के समय DA (₹):</label>
+            <input type="number" id="leaveDa" value="19141" oninput="calcLeaveAndGratuity()">
         </div>
         <div class="form-group">
-            <label>जमा छुट्टियां (Earned Leave Days - Max 300):</label>
-            <input type="number" id="leaveDays" value="300" max="300" oninput="calcLeave()">
+            <label>कुल जमा छुट्टियां (Earned Leave - Max 300):</label>
+            <input type="number" id="leaveDays" value="300" max="300" oninput="calcLeaveAndGratuity()">
         </div>
 
         <div class="result-box">
-            <h4>अवकाश नगदीकरण (Leave Encashment)</h4>
-            <div class="result-row"><span>प्रति दिन वेतन (Per Day Salary):</span> <span id="leavePerDay">₹0</span></div>
-            <div class="result-row result-total result-net"><span>कुल लीव एन्कैशमेंट राशि:</span> <span id="leaveTotal">₹0</span></div>
+            <h4>Leave Encashment विवरण</h4>
+            <div class="result-row"><span>प्रति दिन वेतन:</span> <span id="leavePerDay">₹0</span></div>
+            <div class="result-row result-total"><span>कुल लीव एन्कैशमेंट राशि:</span> <span id="leaveTotal">₹0</span></div>
+        </div>
+
+        <div class="section-title" style="margin-top: 20px;">🏆 ग्रैच्युटी कैलकुलेटर (Gratuity)</div>
+        <div class="form-group">
+            <label>कुल नौकरी के वर्ष (Years of Service):</label>
+            <input type="number" id="gratYears" value="25" oninput="calcLeaveAndGratuity()">
+        </div>
+
+        <div class="result-box">
+            <h4>ग्रैच्युटी विवरण</h4>
+            <div class="result-row result-total result-net"><span>कुल ग्रैच्युटी राशि:</span> <span id="gratTotal">₹0</span></div>
         </div>
 
         <div class="rules-card">
-            <h5>📖 नियम और जानकारी (Rules)</h5>
-            <p><b>English:</b> Calculated on Basic + DA for accumulated Earned Leaves (Max up to 300 days allowed for encashment).</p>
-            <p><b>हिन्दी:</b> यह गणना Basic और DA को मिलाकर 30 दिन के महीने के आधार पर होती है। अधिकतम 300 दिनों की छुट्टी का नगदीकरण मिलता है।</p>
+            <h5>📖 रिटायरमेंट नियम (Retirement Rules)</h5>
+            <p><b>Leave Encashment:</b> Calculated on Last Drawn (Basic + DA) for max 300 days based on a 30-day month.</p>
+            <p><b>Gratuity Formula:</b> (Last Basic + DA) × 15/26 × Years of Service. (रिटायरमेंट के समय की अंतिम बेसिक और डीए पर गणना होती है।)</p>
         </div>
     </div>
 
@@ -497,7 +516,7 @@ window.onload = function() {
         document.getElementById('loanDed').value = localStorage.getItem('loanDed');
     }
     calcSalary();
-    calcLeave();
+    calcLeaveAndGratuity();
     calcEMI();
     calcFD();
     calcSIP();
@@ -542,7 +561,7 @@ function calcSalary() {
     document.getElementById('resNet').innerText = '₹ ' + Math.round(net);
 }
 
-function calcLeave() {
+function calcLeaveAndGratuity() {
     let basic = parseFloat(document.getElementById('leaveBasic').value) || 0;
     let da = parseFloat(document.getElementById('leaveDa').value) || 0;
     let days = parseFloat(document.getElementById('leaveDays').value) || 0;
@@ -554,6 +573,11 @@ function calcLeave() {
 
     document.getElementById('leavePerDay').innerText = '₹ ' + Math.round(perDay);
     document.getElementById('leaveTotal').innerText = '₹ ' + Math.round(totalEncashment);
+
+    // Gratuity Calculation Formula: (Basic + DA) * (15 / 26) * Years of Service
+    let years = parseFloat(document.getElementById('gratYears').value) || 0;
+    let gratuity = totalMonthly * (15 / 26) * years;
+    document.getElementById('gratTotal').innerText = '₹ ' + Math.round(gratuity);
 }
 
 function calcEMI() {
