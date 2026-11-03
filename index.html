@@ -3,51 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>सरकारी सैलरी और फाइनेंशियल कैलकुलेटर - Daksh Yadav</title>
+    <title>स्मार्ट फाइनेंशियल कैलकुलेटर - Daksh Yadav</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
             margin: 0;
             padding: 10px;
+            min-height: 100vh;
         }
         .app-container {
             max-width: 500px;
             background: #ffffff;
             padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
             margin: auto;
         }
         h2 {
             text-align: center;
-            color: #1a73e8;
-            font-size: 22px;
-            margin-bottom: 15px;
+            color: #ffffff;
+            background: linear-gradient(135deg, #1a73e8, #0d47a1);
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(26,115,232,0.3);
         }
         .tabs {
             display: flex;
             justify-content: space-between;
             background: #e8f0fe;
-            border-radius: 8px;
-            padding: 4px;
+            border-radius: 10px;
+            padding: 5px;
             margin-bottom: 20px;
         }
         .tab-btn {
             flex: 1;
-            padding: 8px 4px;
+            padding: 9px 4px;
             border: none;
             background: transparent;
             cursor: pointer;
             font-size: 13px;
             font-weight: bold;
             color: #555;
-            border-radius: 6px;
+            border-radius: 8px;
             text-align: center;
+            transition: all 0.3s ease;
         }
         .tab-btn.active {
-            background: #1a73e8;
+            background: linear-gradient(135deg, #1a73e8, #4285f4);
             color: white;
+            box-shadow: 0 2px 6px rgba(26,115,232,0.4);
         }
         .calculator-section {
             display: none;
@@ -56,31 +63,42 @@
             display: block;
         }
         .form-group {
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
         label {
             display: block;
             font-size: 13px;
             font-weight: bold;
-            margin-bottom: 3px;
+            margin-bottom: 4px;
             color: #333;
         }
         input, select {
             width: 100%;
-            padding: 8px;
+            padding: 9px;
             border: 1px solid #ccc;
-            border-radius: 6px;
+            border-radius: 8px;
             box-sizing: border-box;
             font-size: 14px;
+            background-color: #fafafa;
+            transition: border 0.3s;
+        }
+        input:focus, select:focus {
+            border-color: #1a73e8;
+            outline: none;
             background-color: #fff;
         }
         .section-title {
-            font-size: 15px;
-            color: #1a73e8;
-            border-bottom: 2px solid #1a73e8;
-            padding-bottom: 3px;
-            margin: 15px 0 10px 0;
+            font-size: 14px;
+            color: #ffffff;
+            background: linear-gradient(135deg, #37474f, #263238);
+            padding: 6px 10px;
+            border-radius: 6px;
+            margin: 18px 0 10px 0;
             font-weight: bold;
+        }
+        .input-row {
+            display: flex;
+            gap: 8px;
         }
         .tenure-row {
             display: flex;
@@ -92,37 +110,51 @@
         }
         .tenure-field label {
             font-size: 11px;
-            color: #666;
+            color: #555;
             margin-bottom: 2px;
         }
+        .sub-val {
+            font-size: 12px;
+            color: #1a73e8;
+            margin-top: 3px;
+            font-weight: bold;
+        }
         .result-box {
-            background: #f1f3f4;
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 15px;
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 20px;
             text-align: left;
-            border-left: 4px solid #1a73e8;
+            border-left: 5px solid #1a73e8;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
         .result-box h4 {
-            margin: 0 0 8px 0;
-            color: #1a73e8;
+            margin: 0 0 10px 0;
+            color: #0d47a1;
             font-size: 16px;
             text-align: center;
+            border-bottom: 1px solid #90caf9;
+            padding-bottom: 5px;
         }
         .result-row {
             display: flex;
             justify-content: space-between;
-            font-size: 13px;
-            margin-bottom: 5px;
-            color: #444;
+            font-size: 14px;
+            margin-bottom: 6px;
+            color: #333;
         }
         .result-total {
-            font-size: 15px;
+            font-size: 16px;
             font-weight: bold;
-            color: #0d6efd;
-            border-top: 1px solid #ccc;
-            padding-top: 5px;
-            margin-top: 5px;
+            color: #d32f2f;
+            border-top: 2px dashed #90caf9;
+            padding-top: 8px;
+            margin-top: 8px;
+        }
+        .result-net {
+            font-size: 17px;
+            font-weight: bold;
+            color: #2e7d32;
         }
     </style>
 </head>
@@ -145,40 +177,66 @@
             <input type="number" id="paidDays" value="31">
         </div>
 
-        <div class="section-title">आय (Earnings)</div>
+        <div class="section-title">✨ आय (Earnings)</div>
         <div class="form-group">
             <label>मूल वेतन (Basic Salary ₹):</label>
             <input type="number" id="basicSalary" value="67160" oninput="calcSalary()">
         </div>
+
         <div class="form-group">
-            <label>महंगाई भत्ता (DA % या Amount):</label>
-            <div style="display: flex; gap: 8px;">
+            <label>महंगाई भत्ता (DA):</label>
+            <div class="input-row">
                 <input type="number" id="daInput" value="28.5" step="0.1" oninput="calcSalary()" style="flex: 2;">
                 <select id="daType" onchange="calcSalary()" style="flex: 1;">
-                    <option value="percent" selected>% (प्रतिशत)</option>
-                    <option value="amount">₹ (रकम)</option>
+                    <option value="percent" selected>%</option>
+                    <option value="amount">₹</option>
                 </select>
             </div>
-            <div style="font-size: 12px; color: #1a73e8; margin-top: 4px;">बना हुआ DA: <span id="calculatedDaVal">₹0</span></div>
+            <div class="sub-val">बना हुआ DA: <span id="calculatedDaVal">₹0</span></div>
         </div>
+
         <div class="form-group">
-            <label>विशेष भत्ता (Sp. Allowance ₹):</label>
-            <input type="number" id="spAllow" value="21958" oninput="calcSalary()">
+            <label>विशेष भत्ता (Sp. Allowance):</label>
+            <div class="input-row">
+                <input type="number" id="spInput" value="32.6" step="0.1" oninput="calcSalary()" style="flex: 2;">
+                <select id="spType" onchange="calcSalary()" style="flex: 1;">
+                    <option value="percent" selected>%</option>
+                    <option value="amount">₹</option>
+                </select>
+            </div>
+            <div class="sub-val">बना हुआ Sp. All: <span id="calculatedSpVal">₹0</span></div>
         </div>
+
         <div class="form-group">
             <label>अन्य भत्ते (Learning/Location ₹):</label>
             <input type="number" id="otherAllow" value="2286" oninput="calcSalary()">
         </div>
 
-        <div class="section-title">कटौती (Deductions)</div>
+        <div class="section-title">🔻 कटौती (Deductions)</div>
         <div class="form-group">
-            <label>राष्ट्रीय पेंशन प्रणाली (NPS ₹):</label>
-            <input type="number" id="npsDed" value="8285" oninput="calcSalary()">
+            <label>राष्ट्रीय पेंशन प्रणाली (NPS):</label>
+            <div class="input-row">
+                <input type="number" id="npsInput" value="10" step="0.1" oninput="calcSalary()" style="flex: 2;">
+                <select id="npsType" onchange="calcSalary()" style="flex: 1;">
+                    <option value="percent" selected>% (Basic)</option>
+                    <option value="amount">₹</option>
+                </select>
+            </div>
+            <div class="sub-val">कटा हुआ NPS: <span id="calculatedNpsVal">₹0</span></div>
         </div>
+
         <div class="form-group">
-            <label>आयकर (Income Tax ₹):</label>
-            <input type="number" id="taxDed" value="9000" oninput="calcSalary()">
+            <label>आयकर (Income Tax):</label>
+            <div class="input-row">
+                <input type="number" id="taxInput" value="9000" oninput="calcSalary()" style="flex: 2;">
+                <select id="taxType" onchange="calcSalary()" style="flex: 1;">
+                    <option value="amount" selected>₹</option>
+                    <option value="percent">% (Basic)</option>
+                </select>
+            </div>
+            <div class="sub-val">कटा हुआ Tax: <span id="calculatedTaxVal">₹0</span></div>
         </div>
+
         <div class="form-group">
             <label>लोन / अन्य कटौतियाँ (Loan EMIs / Recovery ₹):</label>
             <input type="number" id="loanDed" value="41036" oninput="calcSalary()">
@@ -186,13 +244,13 @@
 
         <div class="result-box">
             <h4>वेतन पर्ची का सारांश</h4>
-            <div class="result-row"><span>कुल आय (Gross Earnings):</span> <span id="resGross">₹0</span></div>
-            <div class="result-row"><span>कुल कटौती (Total Deductions):</span> <span id="resDed">₹0</span></div>
-            <div class="result-row result-total"><span>शुद्ध वेतन (Net In-Hand Salary):</span> <span id="resNet">₹0</span></div>
+            <div class="result-row"><span>कुल आय (Gross):</span> <span id="resGross">₹0</span></div>
+            <div class="result-row"><span>कुल कटौती (Deductions):</span> <span id="resDed">₹0</span></div>
+            <div class="result-row result-total result-net"><span>शुद्ध वेतन (Net Salary):</span> <span id="resNet">₹0</span></div>
         </div>
     </div>
 
-    <!-- 2. Loan EMI Calculator (Years, Months, Days) -->
+    <!-- 2. Loan EMI Calculator -->
     <div id="emi" class="calculator-section">
         <div class="form-group">
             <label>लोन की कुल रकम (₹):</label>
@@ -205,18 +263,9 @@
         <div class="form-group">
             <label>अवधि (Tenure):</label>
             <div class="tenure-row">
-                <div class="tenure-field">
-                    <label>साल (Years)</label>
-                    <input type="number" id="emiYears" value="14" oninput="calcEMI()">
-                </div>
-                <div class="tenure-field">
-                    <label>महीने (Months)</label>
-                    <input type="number" id="emiMonths" value="2" oninput="calcEMI()">
-                </div>
-                <div class="tenure-field">
-                    <label>दिन (Days)</label>
-                    <input type="number" id="emiDays" value="12" oninput="calcEMI()">
-                </div>
+                <div class="tenure-field"><label>साल</label><input type="number" id="emiYears" value="14" oninput="calcEMI()"></div>
+                <div class="tenure-field"><label>महीने</label><input type="number" id="emiMonths" value="2" oninput="calcEMI()"></div>
+                <div class="tenure-field"><label>दिन</label><input type="number" id="emiDays" value="12" oninput="calcEMI()"></div>
             </div>
         </div>
         <div class="result-box">
@@ -227,7 +276,7 @@
         </div>
     </div>
 
-    <!-- 3. FD Calculator (Years, Months, Days) -->
+    <!-- 3. FD Calculator -->
     <div id="fd" class="calculator-section">
         <div class="form-group">
             <label>निवेश राशि (Principal ₹):</label>
@@ -240,18 +289,9 @@
         <div class="form-group">
             <label>अवधि (Tenure):</label>
             <div class="tenure-row">
-                <div class="tenure-field">
-                    <label>साल (Years)</label>
-                    <input type="number" id="fdYears" value="3" oninput="calcFD()">
-                </div>
-                <div class="tenure-field">
-                    <label>महीने (Months)</label>
-                    <input type="number" id="fdMonths" value="0" oninput="calcFD()">
-                </div>
-                <div class="tenure-field">
-                    <label>दिन (Days)</label>
-                    <input type="number" id="fdDays" value="0" oninput="calcFD()">
-                </div>
+                <div class="tenure-field"><label>साल</label><input type="number" id="fdYears" value="3" oninput="calcFD()"></div>
+                <div class="tenure-field"><label>महीने</label><input type="number" id="fdMonths" value="0" oninput="calcFD()"></div>
+                <div class="tenure-field"><label>दिन</label><input type="number" id="fdDays" value="0" oninput="calcFD()"></div>
             </div>
         </div>
         <div class="result-box">
@@ -262,7 +302,7 @@
         </div>
     </div>
 
-    <!-- 4. SIP Calculator (Years, Months) -->
+    <!-- 4. SIP Calculator -->
     <div id="sip" class="calculator-section">
         <div class="form-group">
             <label>मासिक बचत / SIP (₹):</label>
@@ -275,14 +315,8 @@
         <div class="form-group">
             <label>अवधि (Tenure):</label>
             <div class="tenure-row">
-                <div class="tenure-field">
-                    <label>साल (Years)</label>
-                    <input type="number" id="sipYears" value="5" oninput="calcSIP()">
-                </div>
-                <div class="tenure-field">
-                    <label>महीने (Months)</label>
-                    <input type="number" id="sipMonths" value="0" oninput="calcSIP()">
-                </div>
+                <div class="tenure-field"><label>साल</label><input type="number" id="sipYears" value="5" oninput="calcSIP()"></div>
+                <div class="tenure-field"><label>महीने</label><input type="number" id="sipMonths" value="0" oninput="calcSIP()"></div>
             </div>
         </div>
         <div class="result-box">
@@ -304,26 +338,37 @@ function switchTab(tabId) {
 
 function calcSalary() {
     let basic = parseFloat(document.getElementById('basicSalary').value) || 0;
-    let daInputVal = parseFloat(document.getElementById('daInput').value) || 0;
-    let daType = document.getElementById('daType').value;
     
-    let daAmount = 0;
-    if (daType === 'percent') {
-        daAmount = (basic * daInputVal) / 100;
-    } else {
-        daAmount = daInputVal;
-    }
+    // DA calculation
+    let daVal = parseFloat(document.getElementById('daInput').value) || 0;
+    let daType = document.getElementById('daType').value;
+    let daAmount = (daType === 'percent') ? (basic * daVal) / 100 : daVal;
     document.getElementById('calculatedDaVal').innerText = '₹ ' + Math.round(daAmount);
 
-    let sp = parseFloat(document.getElementById('spAllow').value) || 0;
+    // Special Allowance calculation
+    let spVal = parseFloat(document.getElementById('spInput').value) || 0;
+    let spType = document.getElementById('spType').value;
+    let spAmount = (spType === 'percent') ? (basic * spVal) / 100 : spVal;
+    document.getElementById('calculatedSpVal').innerText = '₹ ' + Math.round(spAmount);
+
     let other = parseFloat(document.getElementById('otherAllow').value) || 0;
 
-    let nps = parseFloat(document.getElementById('npsDed').value) || 0;
-    let tax = parseFloat(document.getElementById('taxDed').value) || 0;
+    // NPS calculation
+    let npsVal = parseFloat(document.getElementById('npsInput').value) || 0;
+    let npsType = document.getElementById('npsType').value;
+    let npsAmount = (npsType === 'percent') ? (basic * npsVal) / 100 : npsVal;
+    document.getElementById('calculatedNpsVal').innerText = '₹ ' + Math.round(npsAmount);
+
+    // Tax calculation
+    let taxVal = parseFloat(document.getElementById('taxInput').value) || 0;
+    let taxType = document.getElementById('taxType').value;
+    let taxAmount = (taxType === 'percent') ? (basic * taxVal) / 100 : taxVal;
+    document.getElementById('calculatedTaxVal').innerText = '₹ ' + Math.round(taxAmount);
+
     let loan = parseFloat(document.getElementById('loanDed').value) || 0;
 
-    let gross = basic + daAmount + sp + other;
-    let totalDed = nps + tax + loan;
+    let gross = basic + daAmount + spAmount + other;
+    let totalDed = npsAmount + taxAmount + loan;
     let net = gross - totalDed;
     if(net < 0) net = 0;
 
@@ -335,13 +380,11 @@ function calcSalary() {
 function calcEMI() {
     let p = parseFloat(document.getElementById('emiAmount').value) || 0;
     let annualRate = parseFloat(document.getElementById('emiRate').value) || 0;
-    
     let years = parseFloat(document.getElementById('emiYears').value) || 0;
     let months = parseFloat(document.getElementById('emiMonths').value) || 0;
     let days = parseFloat(document.getElementById('emiDays').value) || 0;
     
     let totalMonths = (years * 12) + months + (days / 30);
-
     if(totalMonths <= 0 || p <= 0) return;
 
     let r = annualRate / 12 / 100;
@@ -359,13 +402,11 @@ function calcEMI() {
 function calcFD() {
     let p = parseFloat(document.getElementById('fdPrincipal').value) || 0;
     let r = parseFloat(document.getElementById('fdRate').value) || 0;
-    
     let years = parseFloat(document.getElementById('fdYears').value) || 0;
     let months = parseFloat(document.getElementById('fdMonths').value) || 0;
     let days = parseFloat(document.getElementById('fdDays').value) || 0;
     
     let tInYears = years + (months / 12) + (days / 365);
-
     let maturity = p * Math.pow((1 + r / 100), tInYears);
     let interest = maturity - p;
 
@@ -377,12 +418,10 @@ function calcFD() {
 function calcSIP() {
     let p = parseFloat(document.getElementById('sipAmount').value) || 0;
     let annualRate = parseFloat(document.getElementById('sipRate').value) / 100 || 0;
-    
     let years = parseFloat(document.getElementById('sipYears').value) || 0;
     let months = parseFloat(document.getElementById('sipMonths').value) || 0;
     
     let totalMonths = (years * 12) + months;
-
     let i = annualRate / 12;
     let invested = p * totalMonths;
     let fv = (totalMonths > 0 && i > 0) ? p * ((Math.pow(1 + i, totalMonths) - 1) / i) * (1 + i) : invested;
