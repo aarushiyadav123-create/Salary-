@@ -65,13 +65,24 @@
             margin-bottom: 4px;
             color: #333;
         }
-        input {
+        input, select {
             width: 100%;
             padding: 9px;
             border: 1px solid #ccc;
             border-radius: 6px;
             box-sizing: border-box;
             font-size: 15px;
+            background-color: #fff;
+        }
+        .tenure-group {
+            display: flex;
+            gap: 8px;
+        }
+        .tenure-group input {
+            flex: 2;
+        }
+        .tenure-group select {
+            flex: 1;
         }
         .result-box {
             background: #f1f3f4;
@@ -147,7 +158,7 @@
         </div>
     </div>
 
-    <!-- 2. Loan EMI Calculator -->
+    <!-- 2. Loan EMI Calculator (Days / Months / Years) -->
     <div id="emi" class="calculator-section">
         <div class="form-group">
             <label>लोन की कुल रकम (₹):</label>
@@ -158,16 +169,25 @@
             <input type="number" id="emiRate" value="10" step="0.1" oninput="calcEMI()">
         </div>
         <div class="form-group">
-            <label>समय (महीनों में):</label>
-            <input type="number" id="emiMonths" value="12" oninput="calcEMI()">
+            <label>अवधि (Tenure):</label>
+            <div class="tenure-group">
+                <input type="number" id="emiTime" value="12" oninput="calcEMI()">
+                <select id="emiUnit" onchange="calcEMI()">
+                    <option value="months" selected>महीने</option>
+                    <option value="years">साल</option>
+                    <option value="days">दिन</option>
+                </select>
+            </div>
         </div>
-        <div class="result-box" style="text-align: center;">
-            <h4 style="color:#5f6368;">मासिक EMI (Monthly Payment):</h4>
-            <div style="font-size: 18px; font-weight: bold; color: #1a73e8;" id="emiResult">₹0</div>
+        <div class="result-box">
+            <h4>लोन EMI का पूरा विवरण</h4>
+            <div class="result-row"><span>मासिक EMI:</span> <span id="emiMonthly">₹0</span></div>
+            <div class="result-row"><span>कुल ब्याज (Interest):</span> <span id="emiTotalInterest">₹0</span></div>
+            <div class="result-row result-total"><span>कुल भुगतान (Principal + Interest):</span> <span id="emiTotalPay">₹0</span></div>
         </div>
     </div>
 
-    <!-- 3. FD Calculator -->
+    <!-- 3. FD Calculator (Days / Months / Years) -->
     <div id="fd" class="calculator-section">
         <div class="form-group">
             <label>निवेश राशि (Principal ₹):</label>
@@ -178,16 +198,25 @@
             <input type="number" id="fdRate" value="7" step="0.1" oninput="calcFD()">
         </div>
         <div class="form-group">
-            <label>समय (वर्षों में):</label>
-            <input type="number" id="fdYears" value="3" oninput="calcFD()">
+            <label>अवधि (Tenure):</label>
+            <div class="tenure-group">
+                <input type="number" id="fdTime" value="3" oninput="calcFD()">
+                <select id="fdUnit" onchange="calcFD()">
+                    <option value="years" selected>साल</option>
+                    <option value="months">महीने</option>
+                    <option value="days">दिन</option>
+                </select>
+            </div>
         </div>
-        <div class="result-box" style="text-align: center;">
-            <h4 style="color:#5f6368;">मेच्योरिटी पर कुल रकम:</h4>
-            <div style="font-size: 18px; font-weight: bold; color: #1a73e8;" id="fdResult">₹0</div>
+        <div class="result-box">
+            <h4>एफडी (FD) रिटर्न का विवरण</h4>
+            <div class="result-row"><span>मूलधन (Principal):</span> <span id="fdInvested">₹0</span></div>
+            <div class="result-row"><span>कुल मिला ब्याज:</span> <span id="fdInterest">₹0</span></div>
+            <div class="result-row result-total"><span>मेच्योरिटी पर कुल रकम:</span> <span id="fdResult">₹0</span></div>
         </div>
     </div>
 
-    <!-- 4. SIP Calculator -->
+    <!-- 4. SIP Calculator (Months / Years) -->
     <div id="sip" class="calculator-section">
         <div class="form-group">
             <label>मासिक बचत / SIP (₹):</label>
@@ -198,12 +227,20 @@
             <input type="number" id="sipRate" value="12" step="0.1" oninput="calcSIP()">
         </div>
         <div class="form-group">
-            <label>समय (वर्षों में):</label>
-            <input type="number" id="sipYears" value="5" oninput="calcSIP()">
+            <label>अवधि (Tenure):</label>
+            <div class="tenure-group">
+                <input type="number" id="sipTime" value="5" oninput="calcSIP()">
+                <select id="sipUnit" onchange="calcSIP()">
+                    <option value="years" selected>साल</option>
+                    <option value="months">महीने</option>
+                </select>
+            </div>
         </div>
-        <div class="result-box" style="text-align: center;">
-            <h4 style="color:#5f6368;">कुल अनुमानित फंड:</h4>
-            <div style="font-size: 18px; font-weight: bold; color: #1a73e8;" id="sipResult">₹0</div>
+        <div class="result-box">
+            <h4>बचत / SIP का विवरण</h4>
+            <div class="result-row"><span>कुल जमा राशि:</span> <span id="sipInvested">₹0</span></div>
+            <div class="result-row"><span>अनुमानित रिटर्न:</span> <span id="sipReturns">₹0</span></div>
+            <div class="result-row result-total"><span>कुल अनुमानित फंड:</span> <span id="sipResult">₹0</span></div>
         </div>
     </div>
 </div>
@@ -229,36 +266,77 @@ function calcSalary() {
     let netSalary = earnedGross - totalDed;
     if(netSalary < 0) netSalary = 0;
 
-    document.getElementById('resEarnedGross').innerText = '₹ ' + earnedGross.toFixed(0);
-    document.getElementById('resTotalDed').innerText = '₹ ' + totalDed.toFixed(0);
-    document.getElementById('resNetSalary').innerText = '₹ ' + netSalary.toFixed(0);
+    document.getElementById('resEarnedGross').innerText = '₹ ' + Math.round(earnedGross);
+    document.getElementById('resTotalDed').innerText = '₹ ' + Math.round(totalDed);
+    document.getElementById('resNetSalary').innerText = '₹ ' + Math.round(netSalary);
 }
 
 function calcEMI() {
     let p = parseFloat(document.getElementById('emiAmount').value) || 0;
     let annualRate = parseFloat(document.getElementById('emiRate').value) || 0;
-    let n = parseFloat(document.getElementById('emiMonths').value) || 1;
+    let timeVal = parseFloat(document.getElementById('emiTime').value) || 0;
+    let unit = document.getElementById('emiUnit').value;
+    
+    let n = timeVal;
+    if (unit === 'years') n = timeVal * 12;
+    else if (unit === 'days') n = timeVal / 30; // Approx months
+
+    if(n <= 0 || p <= 0) {
+        document.getElementById('emiMonthly').innerText = '₹ 0';
+        document.getElementById('emiTotalInterest').innerText = '₹ 0';
+        document.getElementById('emiTotalPay').innerText = '₹ 0';
+        return;
+    }
+
     let r = annualRate / 12 / 100;
     let emi = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
-    document.getElementById('emiResult').innerText = isNaN(emi) ? '₹ 0' : '₹ ' + emi.toFixed(0);
+    if (isNaN(emi) || !isFinite(emi)) emi = p / n;
+
+    let totalPay = emi * n;
+    let totalInterest = totalPay - p;
+
+    document.getElementById('emiMonthly').innerText = '₹ ' + Math.round(emi);
+    document.getElementById('emiTotalInterest').innerText = '₹ ' + Math.round(totalInterest);
+    document.getElementById('emiTotalPay').innerText = '₹ ' + Math.round(totalPay);
 }
 
 function calcFD() {
     let p = parseFloat(document.getElementById('fdPrincipal').value) || 0;
     let r = parseFloat(document.getElementById('fdRate').value) || 0;
-    let t = parseFloat(document.getElementById('fdYears').value) || 0;
-    let maturity = p * Math.pow((1 + r / 100), t);
-    document.getElementById('fdResult').innerText = '₹ ' + maturity.toFixed(0);
+    let timeVal = parseFloat(document.getElementById('fdTime').value) || 0;
+    let unit = document.getElementById('fdUnit').value;
+
+    let tInYears = timeVal;
+    if (unit === 'months') tInYears = timeVal / 12;
+    else if (unit === 'days') tInYears = timeVal / 365;
+
+    let maturity = p * Math.pow((1 + r / 100), tInYears);
+    let interest = maturity - p;
+
+    document.getElementById('fdInvested').innerText = '₹ ' + Math.round(p);
+    document.getElementById('fdInterest').innerText = '₹ ' + Math.round(interest);
+    document.getElementById('fdResult').innerText = '₹ ' + Math.round(maturity);
 }
 
 function calcSIP() {
     let p = parseFloat(document.getElementById('sipAmount').value) || 0;
     let annualRate = parseFloat(document.getElementById('sipRate').value) || 0;
-    let years = parseFloat(document.getElementById('sipYears').value) || 0;
+    let timeVal = parseFloat(document.getElementById('sipTime').value) || 0;
+    let unit = document.getElementById('sipUnit').value;
+
+    let months = timeVal;
+    if (unit === 'years') months = timeVal * 12;
+
     let i = annualRate / 12 / 100;
-    let months = years * 12;
+    let invested = p * months;
     let fv = p * ((Math.pow(1 + i, months) - 1) / i) * (1 + i);
-    document.getElementById('sipResult').innerText = isNaN(fv) ? '₹ 0' : '₹ ' + fv.toFixed(0);
+    if(isNaN(fv)) fv = invested;
+
+    let returns = fv - invested;
+
+    document.getElementById('sipInvested').innerText = '₹ ' + Math.round(invested);
+    document.getElementById('sipReturns').innerText = '₹ ' + Math.round(returns);
+    document.getElementById('sipResult').innerText = '₹ ' + Math.round(fv);
 }
 
 calcSalary();
