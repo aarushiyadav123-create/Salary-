@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>स्मार्ट फाइनेंशियल कैलकुलेटर - Daksh Yadav</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 10px;
+        }
+        .app-container {
+            max-width: 480px;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin: auto;
+        }
+        h2 {
+            text-align: center;
+            color: #1a73e8;
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+        /* Tab Navigation */
+        .tabs {
+            display: flex;
+            justify-content: space-between;
+            background: #e8f0fe;
+            border-radius: 8px;
+            padding: 4px;
+            margin-bottom: 20px;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 8px 4px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            color: #555;
+            border-radius: 6px;
+            text-align: center;
+        }
+        .tab-btn.active {
+            background: #1a73e8;
+            color: white;
+        }
+        .calculator-section {
+            display: none;
+        }
+        .calculator-section.active {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 12px;
+        }
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 4px;
+            color: #333;
+        }
+        input {
+            width: 100%;
+            padding: 9px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 15px;
+        }
+        .result-box {
+            background: #f1f3f4;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            text-align: center;
+            border-left: 4px solid #1a73e8;
+        }
+        .result-box h4 {
+            margin: 0 0 5px 0;
+            color: #5f6368;
+            font-size: 14px;
+        }
+        .result-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1a73e8;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <h2>हिसाब-किताब टूल्स</h2>
+    
+    <!-- Tab Buttons -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('salary')">सैलरी/हाजिरी</button>
+        <button class="tab-btn" onclick="switchTab('emi')">लोन EMI</button>
+        <button class="tab-btn" onclick="switchTab('fd')">एफडी (FD)</button>
+        <button class="tab-btn" onclick="switchTab('sip')">बचत/SIP</button>
+    </div>
+
+    <!-- 1. Salary & Attendance Calculator -->
+    <div id="salary" class="calculator-section active">
+        <div class="form-group">
+            <label>मासिक ग्रॉस सैलरी (₹):</label>
+            <input type="number" id="salGross" value="25000" oninput="calcSalary()">
+        </div>
+        <div class="form-group">
+            <label>महीने के कुल दिन:</label>
+            <input type="number" id="salTotalDays" value="30" oninput="calcSalary()">
+        </div>
+        <div class="form-group">
+            <label>पूरी हाजिरी / काम के दिन:</label>
+            <input type="number" id="salWorkedDays" value="26" oninput="calcSalary()">
+        </div>
+        <div class="result-box">
+            <h4>हाजिरी के हिसाब से नेट सैलरी:</h4>
+            <div class="result-value" id="salResult">₹0</div>
+        </div>
+    </div>
+
+    <!-- 2. Loan EMI Calculator -->
+    <div id="emi" class="calculator-section">
+        <div class="form-group">
+            <label>लोन की कुल रकम (₹):</label>
+            <input type="number" id="emiAmount" value="100000" oninput="calcEMI()">
+        </div>
+        <div class="form-group">
+            <label>ब्याज दर (% वार्षिक):</label>
+            <input type="number" id="emiRate" value="10" step="0.1" oninput="calcEMI()">
+        </div>
+        <div class="form-group">
+            <label>समय (महीनों में):</label>
+            <input type="number" id="emiMonths" value="12" oninput="calcEMI()">
+        </div>
+        <div class="result-box">
+            <h4>मासिक EMI (Monthly Payment):</h4>
+            <div class="result-value" id="emiResult">₹0</div>
+        </div>
+    </div>
+
+    <!-- 3. FD Calculator -->
+    <div id="fd" class="calculator-section">
+        <div class="form-group">
+            <label>निवेश राशि (Principal ₹):</label>
+            <input type="number" id="fdPrincipal" value="50000" oninput="calcFD()">
+        </div>
+        <div class="form-group">
+            <label>ब्याज दर (% वार्षिक):</label>
+            <input type="number" id="fdRate" value="7" step="0.1" oninput="calcFD()">
+        </div>
+        <div class="form-group">
+            <label>समय (वर्षों में):</label>
+            <input type="number" id="fdYears" value="3" oninput="calcFD()">
+        </div>
+        <div class="result-box">
+            <h4>मेच्योरिटी पर कुल रकम:</h4>
+            <div class="result-value" id="fdResult">₹0</div>
+        </div>
+    </div>
+
+    <!-- 4. SIP / Savings Calculator -->
+    <div id="sip" class="calculator-section">
+        <div class="form-group">
+            <label>मासिक बचत / SIP (₹):</label>
+            <input type="number" id="sipAmount" value="2000" oninput="calcSIP()">
+        </div>
+        <div class="form-group">
+            <label>अनुमानित रिटर्न (% वार्षिक):</label>
+            <input type="number" id="sipRate" value="12" step="0.1" oninput="calcSIP()">
+        </div>
+        <div class="form-group">
+            <label>समय (वर्षों में):</label>
+            <input type="number" id="sipYears" value="5" oninput="calcSIP()">
+        </div>
+        <div class="result-box">
+            <h4>कुल अनुमानित फंड:</h4>
+            <div class="result-value" id="sipResult">₹0</div>
+        </div>
+    </div>
+</div>
+
+<script>
+function switchTab(tabId) {
+    document.querySelectorAll('.calculator-section').forEach(sec => sec.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+}
+
+// 1. Salary Calculation logic
+function calcSalary() {
+    let gross = parseFloat(document.getElementById('salGross').value) || 0;
+    let totalDays = parseFloat(document.getElementById('salTotalDays').value) || 30;
+    let workedDays = parseFloat(document.getElementById('salWorkedDays').value) || 0;
+    
+    let perDay = gross / totalDays;
+    let earned = perDay * workedDays;
+    document.getElementById('salResult').innerText = '₹ ' + earned.toFixed(0);
+}
+
+// 2. Loan EMI Calculation logic
+function calcEMI() {
+    let p = parseFloat(document.getElementById('emiAmount').value) || 0;
+    let annualRate = parseFloat(document.getElementById('emiRate').value) || 0;
+    let n = parseFloat(document.getElementById('emiMonths').value) || 1;
+    
+    let r = annualRate / 12 / 100;
+    let emi = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+    document.getElementById('emiResult').innerText = isNaN(emi) ? '₹ 0' : '₹ ' + emi.toFixed(0);
+}
+
+// 3. FD Calculation logic (Simple Interest estimation or Compound)
+function calcFD() {
+    let p = parseFloat(document.getElementById('fdPrincipal').value) || 0;
+    let r = parseFloat(document.getElementById('fdRate').value) || 0;
+    let t = parseFloat(document.getElementById('fdYears').value) || 0;
+    
+    // Compound interest annually: A = P(1 + r/100)^t
+    let maturity = p * Math.pow((1 + r / 100), t);
+    document.getElementById('fdResult').innerText = '₹ ' + maturity.toFixed(0);
+}
+
+// 4. SIP Calculation logic
+function calcSIP() {
+    let p = parseFloat(document.getElementById('sipAmount').value) || 0;
+    let annualRate = parseFloat(document.getElementById('sipRate').value) || 0;
+    let years = parseFloat(document.getElementById('sipYears').value) || 0;
+    
+    let i = annualRate / 12 / 100;
+    let months = years * 12;
+    let fv = p * ((Math.pow(1 + i, months) - 1) / i) * (1 + i);
+    document.getElementById('sipResult').innerText = isNaN(fv) ? '₹ 0' : '₹ ' + fv.toFixed(0);
+}
+
+// Run initial calculations on load
+calcSalary();
+calcEMI();
+calcFD();
+calcSIP();
+</script>
+
+</body>
+</html>
