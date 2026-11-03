@@ -43,7 +43,7 @@
         }
         .tab-btn {
             flex: 1 1 30%;
-            padding: 9px 4px;
+            padding: 10px 4px;
             border: none;
             background: transparent;
             cursor: pointer;
@@ -207,11 +207,9 @@
     <div class="tabs">
         <button class="tab-btn active" onclick="switchTab('salary', this)">वेतन पर्ची</button>
         <button class="tab-btn" onclick="switchTab('nps', this)">NPS प्लानर</button>
-        <button class="tab-btn" onclick="switchTab('leave', this)">लीव व ग्रैच्युटी</button>
         <button class="tab-btn" onclick="switchTab('emi', this)">लोन EMI</button>
         <button class="tab-btn" onclick="switchTab('fd', this)">एफडी (FD)</button>
         <button class="tab-btn" onclick="switchTab('sip', this)">बचत/SIP</button>
-        <button class="tab-btn" onclick="switchTab('ppf', this)">PPF</button>
         <button class="tab-btn" onclick="switchTab('ssy', this)">सुकन्या</button>
     </div>
 
@@ -355,52 +353,7 @@
         </div>
     </div>
 
-    <!-- 3. Leave Encashment & Gratuity Calculator -->
-    <div id="leave" class="calculator-section">
-        <div class="section-title">🏖️ अवकाश नगदीकरण (Leave Encashment)</div>
-        <div class="form-group">
-            <label>रिटायरमेंट के समय Basic Salary (₹):</label>
-            <input type="number" id="leaveBasic" value="120000" oninput="calcLeaveAndGratuity()">
-        </div>
-        <div class="form-group">
-            <label>रिटायरमेंट के समय DA (₹):</label>
-            <input type="number" id="leaveDa" value="45000" oninput="calcLeaveAndGratuity()">
-        </div>
-        <div class="form-group">
-            <label>कुल जमा छुट्टियां (Earned Leave - Max 300):</label>
-            <input type="number" id="leaveDays" value="300" max="300" oninput="calcLeaveAndGratuity()">
-        </div>
-
-        <div class="result-box">
-            <h4>Leave Encashment विवरण</h4>
-            <div class="result-row"><span>प्रति दिन वेतन:</span> <span id="leavePerDay">₹0</span></div>
-            <div class="result-row result-total"><span>कुल लीव एन्कैशमेंट राशि:</span> <span id="leaveTotal">₹0</span></div>
-        </div>
-
-        <div class="section-title" style="margin-top: 20px;">🏆 ग्रैच्युटी कैलकुलेटर (Gratuity)</div>
-        <div class="form-group">
-            <label>नौकरी ज्वाइन करने की तारीख (Joining Date):</label>
-            <input type="date" id="joinDate" value="2011-11-21" onchange="calcLeaveAndGratuity()">
-        </div>
-        <div class="form-group">
-            <label>रिटायरमेंट की तारीख (Retirement Date):</label>
-            <input type="date" id="retireDate" value="2045-08-31" onchange="calcLeaveAndGratuity()">
-        </div>
-        <div class="sub-val" style="margin-bottom: 8px;">कुल सेवा अवधि: <span id="serviceYearsText">0 वर्ष</span></div>
-
-        <div class="result-box">
-            <h4>ग्रैच्युटी विवरण</h4>
-            <div class="result-row result-total result-net"><span>कुल ग्रैच्युटी राशि:</span> <span id="gratTotal">₹0</span></div>
-        </div>
-
-        <div class="rules-card">
-            <h5>📖 रिटायरमेंट नियम (Retirement Rules)</h5>
-            <p><b>Leave Encashment:</b> Calculated on Last Drawn (Basic + DA) for max 300 days.</p>
-            <p><b>Gratuity Formula:</b> (Last Basic + DA) × 15/26 × Years of Service.</p>
-        </div>
-    </div>
-
-    <!-- 4. Loan EMI Calculator -->
+    <!-- 3. Loan EMI Calculator -->
     <div id="emi" class="calculator-section">
         <div class="form-group">
             <label>लोन की कुल रकम (₹):</label>
@@ -426,7 +379,7 @@
         </div>
     </div>
 
-    <!-- 5. FD Calculator -->
+    <!-- 4. FD Calculator -->
     <div id="fd" class="calculator-section">
         <div class="form-group">
             <label>निवेश राशि (Principal ₹):</label>
@@ -452,7 +405,7 @@
         </div>
     </div>
 
-    <!-- 6. SIP Calculator -->
+    <!-- 5. SIP Calculator -->
     <div id="sip" class="calculator-section">
         <div class="form-group">
             <label>मासिक बचत / SIP (₹):</label>
@@ -477,35 +430,7 @@
         </div>
     </div>
 
-    <!-- 7. PPF Calculator & Rules -->
-    <div id="ppf" class="calculator-section">
-        <div class="form-group">
-            <label>वार्षिक निवेश (₹):</label>
-            <input type="number" id="ppfAmount" value="150000" oninput="calcPPF()">
-        </div>
-        <div class="form-group">
-            <label>ब्याज दर (% वार्षिक अनुमानित):</label>
-            <input type="number" id="ppfRate" value="7.1" step="0.1" oninput="calcPPF()">
-        </div>
-        <div class="form-group">
-            <label>अवधि (Years - सालो में):</label>
-            <input type="number" id="ppfYears" value="15" oninput="calcPPF()">
-        </div>
-
-        <div class="result-box">
-            <h4>PPF रिटर्न विवरण</h4>
-            <div class="result-row"><span>कुल निवेश (Invested):</span> <span id="ppfInvested">₹0</span></div>
-            <div class="result-row"><span>कुल ब्याज (Interest):</span> <span id="ppfInterest">₹0</span></div>
-            <div class="result-row result-total"><span>कुल मेच्योरिटी वैल्यू:</span> <span id="ppfResult">₹0</span></div>
-        </div>
-
-        <div class="rules-card">
-            <h5>📖 नियम और जानकारी (Rules & Info)</h5>
-            <p><b>PPF:</b> Lock-in period is 15 years. Tax-free returns under Section 80C.</p>
-        </div>
-    </div>
-
-    <!-- 8. Sukanya Samriddhi Yojana (SSY) Calculator & Rules -->
+    <!-- 6. Sukanya Samriddhi Yojana (SSY) Calculator & Rules -->
     <div id="ssy" class="calculator-section">
         <div class="form-group">
             <label>वार्षिक निवेश (Annual Deposit ₹):</label>
@@ -591,11 +516,9 @@ window.onload = function() {
 
     calcSalary();
     calcNPSPlanner();
-    calcLeaveAndGratuity();
     calcEMI();
     calcFD();
     calcSIP();
-    calcPPF();
     calcSSY();
 };
 
@@ -692,36 +615,6 @@ function calcNPSPlanner() {
     document.getElementById('npsMonthlyPension').innerText = '₹ ' + Math.round(monthlyPension) + ' / महीना';
 }
 
-function calcLeaveAndGratuity() {
-    let basic = parseFloat(document.getElementById('leaveBasic').value) || 0;
-    let da = parseFloat(document.getElementById('leaveDa').value) || 0;
-    let days = parseFloat(document.getElementById('leaveDays').value) || 0;
-    if(days > 300) days = 300;
-    if(days < 0) days = 0;
-
-    let totalMonthly = basic + da;
-    let perDay = totalMonthly / 30;
-    let totalEncashment = perDay * days;
-
-    document.getElementById('leavePerDay').innerText = '₹ ' + Math.round(perDay);
-    document.getElementById('leaveTotal').innerText = '₹ ' + Math.round(totalEncashment);
-
-    let jDate = new Date(document.getElementById('joinDate').value);
-    let rDate = new Date(document.getElementById('retireDate').value);
-    
-    let diffTime = rDate - jDate;
-    let diffDays = diffTime / (1000 * 60 * 60 * 24);
-    let serviceYears = diffDays / 365.25;
-    if(isNaN(serviceYears) || serviceYears < 0) serviceYears = 0;
-
-    document.getElementById('serviceYearsText').innerText = serviceYears.toFixed(1) + ' वर्ष (Years)';
-
-    let gratuity = totalMonthly * (15 / 26) * serviceYears;
-    if(gratuity < 0) gratuity = 0;
-
-    document.getElementById('gratTotal').innerText = '₹ ' + Math.round(gratuity);
-}
-
 function calcEMI() {
     let p = parseFloat(document.getElementById('emiAmount').value) || 0;
     let annualRate = parseFloat(document.getElementById('emiRate').value) || 0;
@@ -777,24 +670,6 @@ function calcSIP() {
     document.getElementById('sipInvested').innerText = '₹ ' + Math.round(invested);
     document.getElementById('sipReturns').innerText = '₹ ' + Math.round(returns);
     document.getElementById('sipResult').innerText = '₹ ' + Math.round(fv);
-}
-
-function calcPPF() {
-    let p = parseFloat(document.getElementById('ppfAmount').value) || 0;
-    let r = parseFloat(document.getElementById('ppfRate').value) / 100 || 0;
-    let n = parseInt(document.getElementById('ppfYears').value) || 15;
-
-    let totalInvested = p * n;
-    let balance = 0;
-    for(let i = 0; i < n; i++) {
-        balance = (balance + p) * (1 + r);
-    }
-    let interest = balance - totalInvested;
-    if(balance < 0) balance = 0;
-
-    document.getElementById('ppfInvested').innerText = '₹ ' + Math.round(totalInvested);
-    document.getElementById('ppfInterest').innerText = '₹ ' + Math.round(interest);
-    document.getElementById('ppfResult').innerText = '₹ ' + Math.round(balance);
 }
 
 function calcSSY() {
