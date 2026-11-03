@@ -291,9 +291,9 @@
         <button class="btn-pdf" onclick="window.print()">📥 PDF / Print रिपोर्ट डाउनलोड करें</button>
     </div>
 
-    <!-- 2. Advanced NPS Retirement Planner with Salary Increments -->
+    <!-- 2. Advanced NPS Retirement & Withdrawal Planner -->
     <div id="nps" class="calculator-section">
-        <div class="section-title">🛡️ NPS रिटायरमेंट और कॉर्पस प्लानर</div>
+        <div class="section-title">🛡️ NPS रिटायरमेंट, कॉर्पस और पेंशन प्लानर</div>
         <div class="form-group">
             <label>अब तक का जमा कुल NPS बैलेंस (Existing Corpus ₹):</label>
             <input type="number" id="npsExistingCorpus" value="2200000" oninput="calcNPSPlanner()">
@@ -309,7 +309,7 @@
         </div>
         <div class="form-group">
             <label>वार्षिक वेतन वृद्धि / Hike (% प्रति वर्ष):</label>
-            <input type="number" id="npsSalaryHike" value="5" step="0.5" oninput="calcNPSPlanner()">
+            <input type="number" id="npsSalaryHike" value="3" step="0.5" oninput="calcNPSPlanner()">
         </div>
         <div class="form-group">
             <label>अनुमानित वार्षिक रिटर्न (%):</label>
@@ -326,17 +326,20 @@
         <div class="sub-val" style="margin-bottom: 8px;">बची हुई सेवा अवधि (Time Left): <span id="npsTimeLeftText">0 वर्ष</span></div>
 
         <div class="result-box">
-            <h4>NPS मेच्योरिटी / कॉर्पस विवरण</h4>
+            <h4>NPS कॉर्पस और निकासी विवरण</h4>
             <div class="result-row"><span>पुरानी जमा राशि:</span> <span id="npsOldInv">₹0</span></div>
-            <div class="result-row"><span>आगे नई जमा राशि (Total Invested):</span> <span id="npsNewInv">₹0</span></div>
+            <div class="result-row"><span>आगे नई जमा राशि (Invested):</span> <span id="npsNewInv">₹0</span></div>
             <div class="result-row"><span>कुल रिटर्न (Compound Interest):</span> <span id="npsTotalRet">₹0</span></div>
-            <div class="result-row result-total result-net"><span>कुल रिटायरमेंट फंड (Total Corpus):</span> <span id="npsCorpusTotal">₹0</span></div>
+            <div class="result-row result-total"><span>कुल रिटायरमेंट फंड (Total Corpus):</span> <span id="npsCorpusTotal">₹0</span></div>
+            <div class="result-row" style="margin-top: 8px; color: #1565c0; font-weight: bold;"><span>60% टैक्स-फ्री एकमुश्त (Lump-sum):</span> <span id="npsLumpSum">₹0</span></div>
+            <div class="result-row" style="color: #6a1b9a; font-weight: bold;"><span>40% एन्युइटी (Pension Fund):</span> <span id="npsAnnuityFund">₹0</span></div>
+            <div class="result-row result-net" style="margin-top: 6px;"><span>अनुमानित मासिक पेंशन (Monthly Pension):</span> <span id="npsMonthlyPension">₹0</span></div>
         </div>
 
         <div class="rules-card">
-            <h5>📖 NPS नियम और जानकारी (Rules)</h5>
-            <p><b>English:</b> Automatically increases monthly NPS contributions every year based on your Annual Salary Hike percentage, compounded monthly till retirement.</p>
-            <p><b>हिन्दी:</b> यह कैलकुलेटर हर साल वेतन में होने वाली वृद्धि (Hike %) के हिसाब से आपकी NPS कटौती को स्वतः बढ़ाता है, जिससे रिटायरमेंट पर मिलने वाला कॉर्पस एकदम सटीक बैठता है।</p>
+            <h5>📖 NPS निकासी और पेंशन नियम (Rules)</h5>
+            <p><b>Lump-sum & Pension:</b> Retirement par total corpus ka 60% paisa ek sath tax-free milta hai, aur baki 40% se pension (Annuity) shuru hoti hai.</p>
+            <p><b>हिन्दी:</b> कुल फंड का 60% हिस्सा एक साथ (Lump-sum) आपके खाते में आ जाता है (जिसपर कोई टैक्स नहीं लगता), और शेष 40% हिस्से से हर महीने की पेंशन (लगभग 6.5% रिटर्न मानकर) तय होती है।</p>
         </div>
     </div>
 
@@ -637,7 +640,6 @@ function calcNPSPlanner() {
     let currentDep = initialMonthlyDep;
 
     for(let m = 1; m <= totalMonths; m++) {
-        // Every 12 months, increase salary/contribution by salaryHikeRate
         if(m > 1 && (m - 1) % 12 === 0) {
             currentDep *= (1 + salaryHikeRate);
         }
@@ -650,10 +652,20 @@ function calcNPSPlanner() {
     let totalInvestedAll = existingCorpus + totalNewInvested;
     let totalReturns = futureCorpus - totalInvestedAll;
 
+    // 60% Lump-sum & 40% Annuity calculation
+    let lumpSum = futureCorpus * 0.60;
+    let annuityFund = futureCorpus * 0.40;
+    // Assuming 6.5% annual return on annuity fund for monthly pension
+    let monthlyPension = (annuityFund * (0.065 / 12));
+
     document.getElementById('npsOldInv').innerText = '₹ ' + Math.round(existingCorpus);
     document.getElementById('npsNewInv').innerText = '₹ ' + Math.round(totalNewInvested);
     document.getElementById('npsTotalRet').innerText = '₹ ' + Math.round(totalReturns);
     document.getElementById('npsCorpusTotal').innerText = '₹ ' + Math.round(futureCorpus);
+    
+    document.getElementById('npsLumpSum').innerText = '₹ ' + Math.round(lumpSum);
+    document.getElementById('npsAnnuityFund').innerText = '₹ ' + Math.round(annuityFund);
+    document.getElementById('npsMonthlyPension').innerText = '₹ ' + Math.round(monthlyPension) + ' / महीना';
 }
 
 function calcLeaveAndGratuity() {
