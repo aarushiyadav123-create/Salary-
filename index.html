@@ -45,7 +45,7 @@
             border: none;
             background: transparent;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: bold;
             color: #555;
             border-radius: 8px;
@@ -97,11 +97,7 @@
             margin: 18px 0 10px 0;
             font-weight: bold;
         }
-        .input-row {
-            display: flex;
-            gap: 8px;
-        }
-        .tenure-row {
+        .input-row, .tenure-row {
             display: flex;
             gap: 6px;
         }
@@ -171,6 +167,24 @@
             color: #f57f17;
             font-size: 13px;
         }
+        .btn-pdf {
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+            color: white;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            box-shadow: 0 4px 10px rgba(255,152,0,0.3);
+        }
+        @media print {
+            body { background: white; padding: 0; }
+            .app-container { box-shadow: none; width: 100%; max-width: 100%; }
+            .tabs, .btn-pdf { display: none; }
+        }
     </style>
 </head>
 <body>
@@ -180,31 +194,32 @@
     
     <div class="tabs">
         <button class="tab-btn active" onclick="switchTab('salary')">वेतन पर्ची</button>
+        <button class="tab-btn" onclick="switchTab('leave')">लीव एन्कैश</button>
         <button class="tab-btn" onclick="switchTab('emi')">लोन EMI</button>
         <button class="tab-btn" onclick="switchTab('fd')">एफडी (FD)</button>
         <button class="tab-btn" onclick="switchTab('sip')">बचत/SIP</button>
         <button class="tab-btn" onclick="switchTab('ppf')">PPF/NPS</button>
-        <button class="tab-btn" onclick="switchTab('ssy')">सुकन्या (SSY)</button>
+        <button class="tab-btn" onclick="switchTab('ssy')">सुकन्या</button>
     </div>
 
     <!-- 1. Salary Calculator -->
     <div id="salary" class="calculator-section active">
         <div class="form-group">
             <label>पैतृक दिन (Paid Days):</label>
-            <input type="number" id="paidDays" value="31">
+            <input type="number" id="paidDays" value="31" oninput="saveAndCalc()">
         </div>
 
         <div class="section-title">✨ आय (Earnings)</div>
         <div class="form-group">
             <label>मूल वेतन (Basic Salary ₹):</label>
-            <input type="number" id="basicSalary" value="67160" oninput="calcSalary()">
+            <input type="number" id="basicSalary" value="67160" oninput="saveAndCalc()">
         </div>
 
         <div class="form-group">
             <label>महंगाई भत्ता (DA):</label>
             <div class="input-row">
-                <input type="number" id="daInput" value="28.5" step="0.1" oninput="calcSalary()" style="flex: 2;">
-                <select id="daType" onchange="calcSalary()" style="flex: 1;">
+                <input type="number" id="daInput" value="28.5" step="0.1" oninput="saveAndCalc()" style="flex: 2;">
+                <select id="daType" onchange="saveAndCalc()" style="flex: 1;">
                     <option value="percent" selected>%</option>
                     <option value="amount">₹</option>
                 </select>
@@ -215,8 +230,8 @@
         <div class="form-group">
             <label>विशेष भत्ता (Sp. Allowance):</label>
             <div class="input-row">
-                <input type="number" id="spInput" value="32.6" step="0.1" oninput="calcSalary()" style="flex: 2;">
-                <select id="spType" onchange="calcSalary()" style="flex: 1;">
+                <input type="number" id="spInput" value="32.6" step="0.1" oninput="saveAndCalc()" style="flex: 2;">
+                <select id="spType" onchange="saveAndCalc()" style="flex: 1;">
                     <option value="percent" selected>%</option>
                     <option value="amount">₹</option>
                 </select>
@@ -226,15 +241,15 @@
 
         <div class="form-group">
             <label>अन्य भत्ते (Learning/Location ₹):</label>
-            <input type="number" id="otherAllow" value="2286" oninput="calcSalary()">
+            <input type="number" id="otherAllow" value="2286" oninput="saveAndCalc()">
         </div>
 
         <div class="section-title">🔻 कटौती (Deductions)</div>
         <div class="form-group">
             <label>राष्ट्रीय पेंशन प्रणाली (NPS):</label>
             <div class="input-row">
-                <input type="number" id="npsInput" value="10" step="0.1" oninput="calcSalary()" style="flex: 2;">
-                <select id="npsType" onchange="calcSalary()" style="flex: 1;">
+                <input type="number" id="npsInput" value="10" step="0.1" oninput="saveAndCalc()" style="flex: 2;">
+                <select id="npsType" onchange="saveAndCalc()" style="flex: 1;">
                     <option value="percent" selected>% (Basic)</option>
                     <option value="amount">₹</option>
                 </select>
@@ -245,8 +260,8 @@
         <div class="form-group">
             <label>आयकर (Income Tax):</label>
             <div class="input-row">
-                <input type="number" id="taxInput" value="9000" oninput="calcSalary()" style="flex: 2;">
-                <select id="taxType" onchange="calcSalary()" style="flex: 1;">
+                <input type="number" id="taxInput" value="9000" oninput="saveAndCalc()" style="flex: 2;">
+                <select id="taxType" onchange="saveAndCalc()" style="flex: 1;">
                     <option value="amount" selected>₹</option>
                     <option value="percent">% (Basic)</option>
                 </select>
@@ -256,7 +271,7 @@
 
         <div class="form-group">
             <label>लोन / अन्य कटौतियाँ (Loan EMIs / Recovery ₹):</label>
-            <input type="number" id="loanDed" value="41036" oninput="calcSalary()">
+            <input type="number" id="loanDed" value="41036" oninput="saveAndCalc()">
         </div>
 
         <div class="result-box">
@@ -265,9 +280,39 @@
             <div class="result-row"><span>कुल कटौती (Deductions):</span> <span id="resDed">₹0</span></div>
             <div class="result-row result-total result-net"><span>शुद्ध वेतन (Net Salary):</span> <span id="resNet">₹0</span></div>
         </div>
+
+        <button class="btn-pdf" onclick="window.print()">📥 PDF / Print रिपोर्ट डाउनलोड करें</button>
     </div>
 
-    <!-- 2. Loan EMI Calculator -->
+    <!-- 2. Leave Encashment Calculator -->
+    <div id="leave" class="calculator-section">
+        <div class="form-group">
+            <label>मूल वेतन (Basic Salary ₹):</label>
+            <input type="number" id="leaveBasic" value="67160" oninput="calcLeave()">
+        </div>
+        <div class="form-group">
+            <label>महंगाई भत्ता (DA ₹):</label>
+            <input type="number" id="leaveDa" value="19141" oninput="calcLeave()">
+        </div>
+        <div class="form-group">
+            <label>जमा छुट्टियां (Earned Leave Days - Max 300):</label>
+            <input type="number" id="leaveDays" value="300" max="300" oninput="calcLeave()">
+        </div>
+
+        <div class="result-box">
+            <h4>अवकाश नगदीकरण (Leave Encashment)</h4>
+            <div class="result-row"><span>प्रति दिन वेतन (Per Day Salary):</span> <span id="leavePerDay">₹0</span></div>
+            <div class="result-row result-total result-net"><span>कुल लीव एन्कैशमेंट राशि:</span> <span id="leaveTotal">₹0</span></div>
+        </div>
+
+        <div class="rules-card">
+            <h5>📖 नियम और जानकारी (Rules)</h5>
+            <p><b>English:</b> Calculated on Basic + DA for accumulated Earned Leaves (Max up to 300 days allowed for encashment).</p>
+            <p><b>हिन्दी:</b> यह गणना Basic और DA को मिलाकर 30 दिन के महीने के आधार पर होती है। अधिकतम 300 दिनों की छुट्टी का नगदीकरण मिलता है।</p>
+        </div>
+    </div>
+
+    <!-- 3. Loan EMI Calculator -->
     <div id="emi" class="calculator-section">
         <div class="form-group">
             <label>लोन की कुल रकम (₹):</label>
@@ -293,7 +338,7 @@
         </div>
     </div>
 
-    <!-- 3. FD Calculator -->
+    <!-- 4. FD Calculator -->
     <div id="fd" class="calculator-section">
         <div class="form-group">
             <label>निवेश राशि (Principal ₹):</label>
@@ -319,7 +364,7 @@
         </div>
     </div>
 
-    <!-- 4. SIP Calculator -->
+    <!-- 5. SIP Calculator -->
     <div id="sip" class="calculator-section">
         <div class="form-group">
             <label>मासिक बचत / SIP (₹):</label>
@@ -344,7 +389,7 @@
         </div>
     </div>
 
-    <!-- 5. PPF / NPS Calculator & Rules -->
+    <!-- 6. PPF / NPS Calculator & Rules -->
     <div id="ppf" class="calculator-section">
         <div class="form-group">
             <label>योजना चुनें (Select Scheme):</label>
@@ -380,7 +425,7 @@
         </div>
     </div>
 
-    <!-- 6. Sukanya Samriddhi Yojana (SSY) Calculator & Rules -->
+    <!-- 7. Sukanya Samriddhi Yojana (SSY) Calculator & Rules -->
     <div id="ssy" class="calculator-section">
         <div class="form-group">
             <label>वार्षिक निवेश (Annual Deposit ₹):</label>
@@ -418,6 +463,48 @@ function switchTab(tabId) {
     event.currentTarget.classList.add('active');
 }
 
+// Local Storage Save & Load
+function saveAndCalc() {
+    localStorage.setItem('basicSalary', document.getElementById('basicSalary').value);
+    localStorage.setItem('paidDays', document.getElementById('paidDays').value);
+    localStorage.setItem('daInput', document.getElementById('daInput').value);
+    localStorage.setItem('daType', document.getElementById('daType').value);
+    localStorage.setItem('spInput', document.getElementById('spInput').value);
+    localStorage.setItem('spType', document.getElementById('spType').value);
+    localStorage.setItem('otherAllow', document.getElementById('otherAllow').value);
+    localStorage.setItem('npsInput', document.getElementById('npsInput').value);
+    localStorage.setItem('npsType', document.getElementById('npsType').value);
+    localStorage.setItem('taxInput', document.getElementById('taxInput').value);
+    localStorage.setItem('taxType', document.getElementById('taxType').value);
+    localStorage.setItem('loanDed', document.getElementById('loanDed').value);
+
+    calcSalary();
+}
+
+window.onload = function() {
+    if(localStorage.getItem('basicSalary')) {
+        document.getElementById('basicSalary').value = localStorage.getItem('basicSalary');
+        document.getElementById('paidDays').value = localStorage.getItem('paidDays') || 31;
+        document.getElementById('daInput').value = localStorage.getItem('daInput');
+        document.getElementById('daType').value = localStorage.getItem('daType');
+        document.getElementById('spInput').value = localStorage.getItem('spInput');
+        document.getElementById('spType').value = localStorage.getItem('spType');
+        document.getElementById('otherAllow').value = localStorage.getItem('otherAllow');
+        document.getElementById('npsInput').value = localStorage.getItem('npsInput');
+        document.getElementById('npsType').value = localStorage.getItem('npsType');
+        document.getElementById('taxInput').value = localStorage.getItem('taxInput');
+        document.getElementById('taxType').value = localStorage.getItem('taxType');
+        document.getElementById('loanDed').value = localStorage.getItem('loanDed');
+    }
+    calcSalary();
+    calcLeave();
+    calcEMI();
+    calcFD();
+    calcSIP();
+    calcPPF();
+    calcSSY();
+};
+
 function calcSalary() {
     let basic = parseFloat(document.getElementById('basicSalary').value) || 0;
     
@@ -453,6 +540,20 @@ function calcSalary() {
     document.getElementById('resGross').innerText = '₹ ' + Math.round(gross);
     document.getElementById('resDed').innerText = '₹ ' + Math.round(totalDed);
     document.getElementById('resNet').innerText = '₹ ' + Math.round(net);
+}
+
+function calcLeave() {
+    let basic = parseFloat(document.getElementById('leaveBasic').value) || 0;
+    let da = parseFloat(document.getElementById('leaveDa').value) || 0;
+    let days = parseFloat(document.getElementById('leaveDays').value) || 0;
+    if(days > 300) days = 300;
+
+    let totalMonthly = basic + da;
+    let perDay = totalMonthly / 30;
+    let totalEncashment = perDay * days;
+
+    document.getElementById('leavePerDay').innerText = '₹ ' + Math.round(perDay);
+    document.getElementById('leaveTotal').innerText = '₹ ' + Math.round(totalEncashment);
 }
 
 function calcEMI() {
@@ -552,13 +653,6 @@ function calcSSY() {
     document.getElementById('ssyInterest').innerText = '₹ ' + Math.round(interest);
     document.getElementById('ssyResult').innerText = '₹ ' + Math.round(balance);
 }
-
-calcSalary();
-calcEMI();
-calcFD();
-calcSIP();
-calcPPF();
-calcSSY();
 </script>
 
 </body>
