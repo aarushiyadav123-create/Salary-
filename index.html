@@ -291,9 +291,13 @@
         <button class="btn-pdf" onclick="window.print()">📥 PDF / Print रिपोर्ट डाउनलोड करें</button>
     </div>
 
-    <!-- 2. Advanced NPS Retirement Planner -->
+    <!-- 2. Advanced NPS Retirement Planner with Existing Corpus & Dates -->
     <div id="nps" class="calculator-section">
-        <div class="section-title">🛡️ NPS रिटायरमेंट फंड प्रोजेक्शन</div>
+        <div class="section-title">🛡️ NPS रिटायरमेंट और कॉर्पस प्लानर</div>
+        <div class="form-group">
+            <label>अब तक का जमा कुल NPS बैलेंस (Existing Saved Corpus ₹):</label>
+            <input type="number" id="npsExistingCorpus" value="500000" oninput="calcNPSPlanner()">
+        </div>
         <div class="form-group">
             <label>वर्तमान बेसिक + DA कुल मासिक (₹):</label>
             <input type="number" id="npsBaseMonthly" value="86301" oninput="calcNPSPlanner()">
@@ -301,28 +305,34 @@
         <div class="form-group">
             <label>कुल मासिक NPS अंशदान (Employee + Employer %):</label>
             <input type="number" id="npsContribPercent" value="14" step="0.5" oninput="calcNPSPlanner()">
-            <div class="sub-val">मासिक जमा राशि: <span id="npsMonthlyDep">₹0</span></div>
+            <div class="sub-val">मासिक नई जमा राशि: <span id="npsMonthlyDep">₹0</span></div>
         </div>
         <div class="form-group">
             <label>अनुमानित वार्षिक रिटर्न (%):</label>
             <input type="number" id="npsReturnRate" value="10" step="0.5" oninput="calcNPSPlanner()">
         </div>
         <div class="form-group">
-            <label>रिटायरमेंट में बचे कुल वर्ष (Years Left):</label>
-            <input type="number" id="npsYearsLeft" value="19" oninput="calcNPSPlanner()">
+            <label>आज की तारीख (Current Date / Calculation Start):</label>
+            <input type="date" id="npsStartDate" value="2026-11-04" onchange="calcNPSPlanner()">
         </div>
+        <div class="form-group">
+            <label>रिटायरमेंट या VRS की तारीख (Retirement / VRS Date):</label>
+            <input type="date" id="npsRetireDate" value="2045-01-01" onchange="calcNPSPlanner()">
+        </div>
+        <div class="sub-val" style="margin-bottom: 8px;">बची हुई सेवा अवधि (Time Left): <span id="npsTimeLeftText">0 वर्ष</span></div>
 
         <div class="result-box">
             <h4>NPS मेच्योरिटी / कॉर्पस विवरण</h4>
-            <div class="result-row"><span>कुल जमा राशि (Total Invested):</span> <span id="npsTotalInv">₹0</span></div>
+            <div class="result-row"><span>पुरानी जमा राशि:</span> <span id="npsOldInv">₹0</span></div>
+            <div class="result-row"><span>आगे नई जमा राशि (Total Invested):</span> <span id="npsNewInv">₹0</span></div>
             <div class="result-row"><span>कुल रिटर्न (Compound Interest):</span> <span id="npsTotalRet">₹0</span></div>
-            <div class="result-row result-total result-net"><span>कुल रिटायरमेंट फंड (Corpus):</span> <span id="npsCorpusTotal">₹0</span></div>
+            <div class="result-row result-total result-net"><span>कुल रिटायरमेंट फंड (Total Corpus):</span> <span id="npsCorpusTotal">₹0</span></div>
         </div>
 
         <div class="rules-card">
             <h5>📖 NPS नियम और जानकारी (Rules)</h5>
-            <p><b>English:</b> Calculated based on monthly compounding of employee & employer contributions till retirement age.</p>
-            <p><b>हिन्दी:</b> यह कैलकुलेटर आपकी मासिक NPS कटौती और उस पर मिलने वाले चक्रवृद्धि ब्याज (Compound Interest) के आधार पर रिटायरमेंट का कुल फंड दिखता है।</p>
+            <p><b>English:</b> Combines your existing saved NPS balance with future monthly contributions, growing via compound interest till retirement or VRS date.</p>
+            <p><b>हिन्दी:</b> इसमें आपका पहले से जमा NPS बैलेंस और आगे हर महीने कटने वाला पैसा दोनों जुड़कर चक्रवृद्धि ब्याज (Compound Interest) के साथ रिटायरमेंट या VRS के समय का कुल फंड बनाते हैं।</p>
         </div>
     </div>
 
@@ -594,29 +604,44 @@ function calcSalary() {
 }
 
 function calcNPSPlanner() {
+    let existingCorpus = parseFloat(document.getElementById('npsExistingCorpus').value) || 0;
     let baseMonthly = parseFloat(document.getElementById('npsBaseMonthly').value) || 0;
     let contribPercent = parseFloat(document.getElementById('npsContribPercent').value) || 0;
     let annualRate = parseFloat(document.getElementById('npsReturnRate').value) / 100 || 0;
-    let yearsLeft = parseFloat(document.getElementById('npsYearsLeft').value) || 0;
+    
+    let sDate = new Date(document.getElementById('npsStartDate').value);
+    let rDate = new Date(document.getElementById('npsRetireDate').value);
+
+    let diffTime = rDate - sDate;
+    let diffDays = diffTime / (1000 * 60 * 60 * 24);
+    let yearsLeft = diffDays / 365.25;
+    if(isNaN(yearsLeft) || yearsLeft < 0) yearsLeft = 0;
+
+    let yearsInt = Math.floor(yearsLeft);
+    let monthsRemainder = Math.round((yearsLeft - yearsInt) * 12);
+    document.getElementById('npsTimeLeftText').innerText = yearsInt + ' वर्ष ' + monthsRemainder + ' महीने (' + yearsLeft.toFixed(1) + ' वर्ष)';
 
     let monthlyDep = (baseMonthly * contribPercent) / 100;
     document.getElementById('npsMonthlyDep').innerText = '₹ ' + Math.round(monthlyDep);
 
-    let totalMonths = yearsLeft * 12;
+    let totalMonths = Math.round(yearsLeft * 12);
     let monthlyRate = annualRate / 12;
-    let totalInvested = monthlyDep * totalMonths;
+    let newInvested = monthlyDep * totalMonths;
 
-    let corpus = 0;
+    // Compound existing corpus plus future monthly deposits
+    let futureCorpus = existingCorpus;
     for(let i = 0; i < totalMonths; i++) {
-        corpus = (corpus + monthlyDep) * (1 + monthlyRate);
+        futureCorpus = (futureCorpus + monthlyDep) * (1 + monthlyRate);
     }
-    if(isNaN(corpus) || corpus < 0) corpus = totalInvested;
+    if(isNaN(futureCorpus) || futureCorpus < 0) futureCorpus = existingCorpus + newInvested;
 
-    let totalReturns = corpus - totalInvested;
+    let totalInvestedAll = existingCorpus + newInvested;
+    let totalReturns = futureCorpus - totalInvestedAll;
 
-    document.getElementById('npsTotalInv').innerText = '₹ ' + Math.round(totalInvested);
+    document.getElementById('npsOldInv').innerText = '₹ ' + Math.round(existingCorpus);
+    document.getElementById('npsNewInv').innerText = '₹ ' + Math.round(newInvested);
     document.getElementById('npsTotalRet').innerText = '₹ ' + Math.round(totalReturns);
-    document.getElementById('npsCorpusTotal').innerText = '₹ ' + Math.round(corpus);
+    document.getElementById('npsCorpusTotal').innerText = '₹ ' + Math.round(futureCorpus);
 }
 
 function calcLeaveAndGratuity() {
