@@ -34,23 +34,23 @@
         .tabs {
             display: flex;
             flex-wrap: wrap;
-            gap: 5px;
+            gap: 4px;
             background: #f0f3f8;
             border-radius: 12px;
-            padding: 6px;
+            padding: 5px;
             margin-bottom: 20px;
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
         }
         .tab-btn {
-            flex: 1 1 28%;
-            padding: 9px 3px;
+            flex: 1 1 30%;
+            padding: 7px 2px;
             border: none;
             background: transparent;
             cursor: pointer;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: bold;
             color: #444;
-            border-radius: 9px;
+            border-radius: 8px;
             text-align: center;
             transition: all 0.3s ease;
         }
@@ -219,8 +219,10 @@
         <button class="tab-btn active" onclick="switchTab('salary', this)">वेतन पर्ची</button>
         <button class="tab-btn" onclick="switchTab('nps', this)">NPS प्लानर</button>
         <button class="tab-btn" onclick="switchTab('tax', this)">आयकर (Tax)</button>
-        <button class="tab-btn" onclick="switchTab('arrear', this)">एरियर (Arrear)</button>
+        <button class="tab-btn" onclick="switchTab('arrear', this)">एरियर</button>
         <button class="tab-btn" onclick="switchTab('emi', this)">लोन EMI</button>
+        <button class="tab-btn" onclick="switchTab('prepay', this)">लोन Prepay</button>
+        <button class="tab-btn" onclick="switchTab('expPred', this)">खर्च Predictor</button>
         <button class="tab-btn" onclick="switchTab('fd', this)">एफडी (FD)</button>
         <button class="tab-btn" onclick="switchTab('sip', this)">बचत/SIP</button>
         <button class="tab-btn" onclick="switchTab('ssy', this)">सुकन्या</button>
@@ -354,7 +356,7 @@
         </div>
     </div>
 
-    <!-- 3. Income Tax Calculator (Old vs New) - Detailed & Explained -->
+    <!-- 3. Income Tax Calculator -->
     <div id="tax" class="calculator-section">
         <div class="section-title">📊 आयकर गणना (Old vs New Tax Regime)</div>
         <div class="form-group">
@@ -392,10 +394,9 @@
         </div>
 
         <div class="rules-card">
-            <h5>📖 टैक्स नियम और छूट की पूरी जानकारी (Tax Rules & Guide)</h5>
-            <p><b>1. Old Tax Regime (पुरानी व्यवस्था):</b> इसमें 80C (₹1.5 Lakh), NPS 80CCD(1B) (₹50,000), HRA, और Home Loan Interest (₹2 Lakh तक) जैसी सभी छूट मिलती हैं.</p>
-            <p><b>2. New Tax Regime (नयी व्यवस्था):</b> इसमें सामान्यतः कोई डिडक्शन नहीं मिलती, केवल <b>Standard Deduction (₹75,000)</b> मिलती है, लेकिन इसके टैक्स स्लैब बहुत कम और आसान हैं।</p>
-            <p><b>3. Effective Rate (%):</b> यह बताता है कि आपकी कुल सैलरी का कुल कितना प्रतिशत हिस्सा टैक्स के रूप में जा रहा है।</p>
+            <h5>📖 टैक्स नियम और छूट की पूरी जानकारी</h5>
+            <p><b>1. Old Tax Regime:</b> 80C, 80CCD(1B), HRA, और Home Loan Interest की छूट मिलती है.</p>
+            <p><b>2. New Tax Regime:</b> केवल Standard Deduction (₹75,000) मिलती है, टैक्स स्लैब सरल हैं।</p>
         </div>
     </div>
 
@@ -426,8 +427,8 @@
         <div class="result-box">
             <h4>एरियर गणना विवरण</h4>
             <div class="result-row"><span>प्रति माह DA का अंतर:</span> <span id="arrDiffPerMonth">₹0</span></div>
-            <div class="result-row"><span>कुल ग्रॉस एरियर (Gross Arrear):</span> <span id="arrGrossTotal">₹0</span></div>
-            <div class="result-row"><span>NPS कटौती (Deduction):</span> <span id="arrNpsTotal">₹0</span></div>
+            <div class="result-row"><span>कुल ग्रॉस एरियर:</span> <span id="arrGrossTotal">₹0</span></div>
+            <div class="result-row"><span>NPS कटौती:</span> <span id="arrNpsTotal">₹0</span></div>
             <div class="result-row result-total result-net"><span>खाते में आने वाला नेट एरियर:</span> <span id="arrNetTotal">₹0</span></div>
         </div>
     </div>
@@ -458,7 +459,70 @@
         </div>
     </div>
 
-    <!-- 6. FD Calculator -->
+    <!-- 6. Loan Prepayment & Interest Saver -->
+    <div id="prepay" class="calculator-section">
+        <div class="section-title">🚀 लोन प्रीपेमेंट & ब्याज बचत कैलकुलेटर</div>
+        <div class="form-group">
+            <label>बचा हुआ मूल लोन अमाउंट (Outstanding Loan ₹):</label>
+            <input type="number" id="prepPrincipal" value="1000000" oninput="calcPrepay()">
+        </div>
+        <div class="form-group">
+            <label>ब्याज दर (% वार्षिक):</label>
+            <input type="number" id="prepRate" value="8.5" step="0.1" oninput="calcPrepay()">
+        </div>
+        <div class="form-group">
+            <label>बचा हुआ कुल समय (Remaining Years):</label>
+            <input type="number" id="prepYears" value="15" oninput="calcPrepay()">
+        </div>
+        <div class="form-group">
+            <label>अतिरिक्त हर साल प्रीपेमेंट (Extra Yearly Prepayment ₹):</label>
+            <input type="number" id="prepExtraYearly" value="50000" oninput="calcPrepay()">
+        </div>
+
+        <div class="result-box">
+            <h4>ब्याज और समय की बचत</h4>
+            <div class="result-row"><span>मूल बिना प्रीपेमेंट कुल ब्याज:</span> <span id="prepNormalInterest">₹0</span></div>
+            <div class="result-row"><span>प्रीपेमेंट के बाद कुल ब्याज:</span> <span id="prepNewInterest">₹0</span></div>
+            <div class="result-row result-total result-net"><span>कुल ब्याज की बचत (Interest Saved):</span> <span id="prepInterestSaved">₹0</span></div>
+            <div class="result-row" style="margin-top: 6px; font-weight: bold; color: #d81b60;"><span>लोन अवधि कितनी कम होगी:</span> <span id="prepTimeSaved">0 महीने</span></div>
+        </div>
+    </div>
+
+    <!-- 7. Expenses & Inflation Predictor (NEW TOOL) -->
+    <div id="expPred" class="calculator-section">
+        <div class="section-title">📈 महंगाई और भविष्य का खर्चा Predictor</div>
+        <div class="form-group">
+            <label>वर्तमान मासिक खर्च (Current Monthly Expense ₹):</label>
+            <input type="number" id="predExpense" value="35000" oninput="calcExpPredictor()">
+        </div>
+        <div class="form-group">
+            <label>कितने साल बाद का अनुमान (Years Ahead):</label>
+            <select id="predYears" onchange="calcExpPredictor()">
+                <option value="5">5 साल बाद</option>
+                <option value="10" selected>10 साल बाद</option>
+                <option value="15">15 साल बाद</option>
+                <option value="20">20 साल बाद</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>अनुमानित वार्षिक महंगाई दर (Inflation Rate %):</label>
+            <input type="number" id="predInflation" value="6" step="0.5" oninput="calcExpPredictor()">
+        </div>
+
+        <div class="result-box">
+            <h4>भविष्य के खर्च का अनुमान</h4>
+            <div class="result-row"><span>वर्तमान मासिक खर्च:</span> <span id="predCurrentVal">₹0</span></div>
+            <div class="result-row result-total result-net"><span>भविष्य में मासिक खर्च (Future Expense):</span> <span id="predFutureVal">₹0</span></div>
+            <div class="result-row" style="margin-top: 8px; color: #d81b60; font-weight: bold;"><span>कितना खर्चा बढ़ जाएगा (Extra Cost):</span> <span id="predDiffVal">₹0</span></div>
+        </div>
+
+        <div class="rules-card">
+            <h5>💡 यह टूल क्या बताता है?</h5>
+            <p>महंगाई (Inflation) के कारण आज जो चीज़ें ₹35,000 में आती hain, 10 साल बाद वही घर चलाने के लिए आपको लगभग दोगुनी राशि की आवश्यकता होगी। यह आपको भविष्य की वित्तीय योजना बनाने में मदद करता है।</p>
+        </div>
+    </div>
+
+    <!-- 8. FD Calculator -->
     <div id="fd" class="calculator-section">
         <div class="form-group">
             <label>निवेश राशि (Principal ₹):</label>
@@ -484,7 +548,7 @@
         </div>
     </div>
 
-    <!-- 7. SIP Calculator -->
+    <!-- 9. SIP Calculator -->
     <div id="sip" class="calculator-section">
         <div class="form-group">
             <label>मासिक बचत / SIP (₹):</label>
@@ -509,7 +573,7 @@
         </div>
     </div>
 
-    <!-- 8. SSY Calculator -->
+    <!-- 10. SSY Calculator -->
     <div id="ssy" class="calculator-section">
         <div class="form-group">
             <label>वार्षिक निवेश (Annual Deposit ₹):</label>
@@ -591,6 +655,8 @@ window.onload = function() {
     calcTax();
     calcArrear();
     calcEMI();
+    calcPrepay();
+    calcExpPredictor();
     calcFD();
     calcSIP();
     calcSSY();
@@ -692,13 +758,12 @@ function calcNPSPlanner() {
 function calcTax() {
     let gross = parseFloat(document.getElementById('taxAnnualSalary').value) || 0;
     let stdDed = 75000;
-    let c80 = 150000; // Locked max limit
-    let npsEx = 50000; // Locked max limit
+    let c80 = 150000;
+    let npsEx = 50000;
     let hra = parseFloat(document.getElementById('taxHra').value) || 0;
     let homeLoan = parseFloat(document.getElementById('taxHomeLoan').value) || 0;
-    if(homeLoan > 200000) homeLoan = 200000; // Max limit 2 Lakh
+    if(homeLoan > 200000) homeLoan = 200000;
 
-    // --- OLD REGIME ---
     let taxableOld = gross - (stdDed + c80 + npsEx + hra + homeLoan);
     if(taxableOld < 0) taxableOld = 0;
     let taxOld = 0;
@@ -712,7 +777,6 @@ function calcTax() {
 
     let rateOld = gross > 0 ? ((taxOld / gross) * 100).toFixed(1) : 0;
 
-    // --- NEW REGIME ---
     let taxableNew = gross - stdDed;
     if(taxableNew < 0) taxableNew = 0;
     let taxNew = 0;
@@ -783,6 +847,73 @@ function calcEMI() {
     document.getElementById('emiMonthly').innerText = '₹ ' + Math.round(emi);
     document.getElementById('emiTotalInterest').innerText = '₹ ' + Math.round(totalInterest);
     document.getElementById('emiTotalPay').innerText = '₹ ' + Math.round(totalPay);
+}
+
+function calcPrepay() {
+    let p = parseFloat(document.getElementById('prepPrincipal').value) || 0;
+    let annualRate = parseFloat(document.getElementById('prepRate').value) || 0;
+    let years = parseFloat(document.getElementById('prepYears').value) || 0;
+    let extraYearly = parseFloat(document.getElementById('prepExtraYearly').value) || 0;
+
+    if (p <= 0 || years <= 0) return;
+
+    let r = annualRate / 12 / 100;
+    let totalMonths = years * 12;
+
+    let emi = (p * r * Math.pow(1 + r, totalMonths)) / (Math.pow(1 + r, totalMonths) - 1);
+    let normalTotalPay = emi * totalMonths;
+    let normalInterest = normalTotalPay - p;
+
+    let curBal = p;
+    let m = 0;
+    let totalPaidWithPrepay = 0;
+    let actualMonths = 0;
+
+    while (curBal > 0 && m < 600) {
+        m++;
+        let interestForMonth = curBal * r;
+        let principalForMonth = emi - interestForMonth;
+        curBal -= principalForMonth;
+
+        if (m % 12 === 0 && curBal > 0) {
+            curBal -= extraYearly;
+            totalPaidWithPrepay += extraYearly;
+        }
+        totalPaidWithPrepay += emi;
+        if (curBal <= 0) {
+            actualMonths = m;
+            break;
+        }
+    }
+    if (actualMonths === 0) actualMonths = totalMonths;
+
+    let newInterest = totalPaidWithPrepay - p;
+    let interestSaved = normalInterest - newInterest;
+    if (interestSaved < 0) interestSaved = 0;
+
+    let monthsSaved = totalMonths - actualMonths;
+    if (monthsSaved < 0) monthsSaved = 0;
+    let savedYears = Math.floor(monthsSaved / 12);
+    let savedRemMonths = monthsSaved % 12;
+
+    document.getElementById('prepNormalInterest').innerText = '₹ ' + Math.round(normalInterest);
+    document.getElementById('prepNewInterest').innerText = '₹ ' + Math.round(newInterest);
+    document.getElementById('prepInterestSaved').innerText = '₹ ' + Math.round(interestSaved);
+    document.getElementById('prepTimeSaved').innerText = savedYears + ' साल ' + savedRemMonths + ' महीने पहले खत्म';
+}
+
+function calcExpPredictor() {
+    let currentExp = parseFloat(document.getElementById('predExpense').value) || 0;
+    let years = parseInt(document.getElementById('predYears').value) || 10;
+    let inflationRate = parseFloat(document.getElementById('predInflation').value) || 6;
+
+    // Formula: Future Value = Present Value * (1 + inflation/100)^years
+    let futureExp = currentExp * Math.pow((1 + (inflationRate / 100)), years);
+    let diff = futureExp - currentExp;
+
+    document.getElementById('predCurrentVal').innerText = '₹ ' + Math.round(currentExp);
+    document.getElementById('predFutureVal').innerText = '₹ ' + Math.round(futureExp);
+    document.getElementById('predDiffVal').innerText = '+ ₹ ' + Math.round(diff);
 }
 
 function calcFD() {
