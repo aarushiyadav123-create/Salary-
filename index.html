@@ -13,7 +13,7 @@
             min-height: 100vh;
         }
         .app-container {
-            max-width: 500px;
+            max-width: 550px;
             background: #ffffff;
             padding: 20px;
             border-radius: 18px;
@@ -42,7 +42,7 @@
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
         }
         .tab-btn {
-            flex: 1 1 30%;
+            flex: 1 1 22%;
             padding: 7px 2px;
             border: none;
             background: transparent;
@@ -203,10 +203,63 @@
             transition: transform 0.2s;
         }
         .btn-pdf:active { transform: scale(0.98); }
+
+        /* Excel Staff Table Styles */
+        .table-responsive {
+            overflow-x: auto;
+            margin-top: 10px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .excel-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            min-width: 450px;
+        }
+        .excel-table th {
+            background-color: #2e7d32;
+            color: white;
+            padding: 8px 4px;
+            text-align: center;
+            border: 1px solid #1b5e20;
+        }
+        .excel-table td {
+            padding: 4px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        .excel-table input {
+            padding: 5px;
+            font-size: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .btn-add-row {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 8px;
+            font-size: 12px;
+        }
+        .btn-del-row {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
         @media print {
             body { background: white; padding: 0; }
             .app-container { box-shadow: none; width: 100%; max-width: 100%; }
-            .tabs, .btn-pdf { display: none; }
+            .tabs, .btn-pdf, .btn-add-row, .btn-del-row, .no-print { display: none !important; }
         }
     </style>
 </head>
@@ -217,6 +270,7 @@
     
     <div class="tabs">
         <button class="tab-btn active" onclick="switchTab('salary', this)">वेतन पर्ची</button>
+        <button class="tab-btn" onclick="switchTab('staffSheet', this)">📊 स्टाफ बिलिंग</button>
         <button class="tab-btn" onclick="switchTab('nps', this)">NPS प्लानर</button>
         <button class="tab-btn" onclick="switchTab('tax', this)">आयकर (Tax)</button>
         <button class="tab-btn" onclick="switchTab('arrear', this)">एरियर</button>
@@ -310,7 +364,43 @@
         <button class="btn-pdf" onclick="window.print()">📥 PDF / Print रिपोर्ट डाउनलोड करें</button>
     </div>
 
-    <!-- 2. NPS Planner -->
+    <!-- NEW TOOL: Excel Staff Payroll & Bank Advice Sheet -->
+    <div id="staffSheet" class="calculator-section">
+        <div class="section-title">📋 स्टाफ पेमेंट / बैंक एडवाइस शीट (Excel format)</div>
+        
+        <div class="table-responsive">
+            <table class="excel-table" id="staffTable">
+                <thead>
+                    <tr>
+                        <th style="width: 5%;">#</th>
+                        <th style="width: 30%;">स्टाफ नाम</th>
+                        <th style="width: 30%;">अकाउंट नंबर</th>
+                        <th style="width: 20%;">IFSC कोड</th>
+                        <th style="width: 20%;">राशि (₹)</th>
+                        <th class="no-print" style="width: 5%;">हटाएं</th>
+                    </tr>
+                </thead>
+                <tbody id="staffTableBody">
+                    <!-- Dynamic Rows Will Be Added Here -->
+                </tbody>
+            </table>
+        </div>
+
+        <button class="btn-add-row no-print" onclick="addStaffRow()">➕ नया स्टाफ जोड़ें</button>
+
+        <div class="result-box" style="margin-top: 15px;">
+            <h4>भुगतान का कुल सारांश</h4>
+            <div class="result-row"><span>कुल कर्मचारी (Total Staff):</span> <span id="totalStaffCount">0</span></div>
+            <div class="result-row result-total result-net"><span>कुल देय राशि (Total Amount):</span> <span id="totalStaffAmount">₹0</span></div>
+        </div>
+
+        <div style="display: flex; gap: 8px; margin-top: 10px;" class="no-print">
+            <button class="btn-pdf" style="background: linear-gradient(135deg, #11998e, #38ef7d); margin-top:0;" onclick="exportToCSV()">📥 Excel (.CSV) डाउनलोड करें</button>
+            <button class="btn-pdf" style="margin-top:0;" onclick="window.print()">🖨️ प्रिंट निकालें</button>
+        </div>
+    </div>
+
+    <!-- 3. NPS Planner -->
     <div id="nps" class="calculator-section">
         <div class="section-title">🛡️ NPS रिटायरमेंट, कॉर्पस और पेंशन प्लानर</div>
         <div class="form-group">
@@ -356,7 +446,7 @@
         </div>
     </div>
 
-    <!-- 3. Income Tax Calculator -->
+    <!-- 4. Income Tax Calculator -->
     <div id="tax" class="calculator-section">
         <div class="section-title">📊 आयकर गणना (Old vs New Tax Regime)</div>
         <div class="form-group">
@@ -400,7 +490,7 @@
         </div>
     </div>
 
-    <!-- 4. Arrear Calculator -->
+    <!-- 5. Arrear Calculator -->
     <div id="arrear" class="calculator-section">
         <div class="section-title">💰 DA / Salary एरियर कैलकुलेटर</div>
         <div class="form-group">
@@ -433,7 +523,7 @@
         </div>
     </div>
 
-    <!-- 5. Loan EMI Calculator -->
+    <!-- 6. Loan EMI Calculator -->
     <div id="emi" class="calculator-section">
         <div class="form-group">
             <label>लोन की कुल रकम (₹):</label>
@@ -459,7 +549,7 @@
         </div>
     </div>
 
-    <!-- 6. Loan Prepayment & Interest Saver -->
+    <!-- 7. Loan Prepayment & Interest Saver -->
     <div id="prepay" class="calculator-section">
         <div class="section-title">🚀 लोन प्रीपेमेंट & ब्याज बचत कैलकुलेटर</div>
         <div class="form-group">
@@ -488,7 +578,7 @@
         </div>
     </div>
 
-    <!-- 7. Expenses & Inflation Predictor (NEW TOOL) -->
+    <!-- 8. Expenses Predictor -->
     <div id="expPred" class="calculator-section">
         <div class="section-title">📈 महंगाई और भविष्य का खर्चा Predictor</div>
         <div class="form-group">
@@ -515,14 +605,9 @@
             <div class="result-row result-total result-net"><span>भविष्य में मासिक खर्च (Future Expense):</span> <span id="predFutureVal">₹0</span></div>
             <div class="result-row" style="margin-top: 8px; color: #d81b60; font-weight: bold;"><span>कितना खर्चा बढ़ जाएगा (Extra Cost):</span> <span id="predDiffVal">₹0</span></div>
         </div>
-
-        <div class="rules-card">
-            <h5>💡 यह टूल क्या बताता है?</h5>
-            <p>महंगाई (Inflation) के कारण आज जो चीज़ें ₹35,000 में आती hain, 10 साल बाद वही घर चलाने के लिए आपको लगभग दोगुनी राशि की आवश्यकता होगी। यह आपको भविष्य की वित्तीय योजना बनाने में मदद करता है।</p>
-        </div>
     </div>
 
-    <!-- 8. FD Calculator -->
+    <!-- 9. FD Calculator -->
     <div id="fd" class="calculator-section">
         <div class="form-group">
             <label>निवेश राशि (Principal ₹):</label>
@@ -548,7 +633,7 @@
         </div>
     </div>
 
-    <!-- 9. SIP Calculator -->
+    <!-- 10. SIP Calculator -->
     <div id="sip" class="calculator-section">
         <div class="form-group">
             <label>मासिक बचत / SIP (₹):</label>
@@ -573,7 +658,7 @@
         </div>
     </div>
 
-    <!-- 10. SSY Calculator -->
+    <!-- 11. SSY Calculator -->
     <div id="ssy" class="calculator-section">
         <div class="form-group">
             <label>वार्षिक निवेश (Annual Deposit ₹):</label>
@@ -650,6 +735,9 @@ window.onload = function() {
         }
     }
 
+    // Load Staff Data from LocalStorage or Default
+    loadStaffData();
+
     calcSalary();
     calcNPSPlanner();
     calcTax();
@@ -662,6 +750,112 @@ window.onload = function() {
     calcSSY();
 };
 
+/* --- STAFF EXCEL TABLE LOGIC --- */
+let defaultStaffData = [
+    { name: 'Ramesh Kumar', acc: '12345678901', ifsc: 'SBIN0001234', amount: 25000 },
+    { name: 'Suresh Sharma', acc: '98765432109', ifsc: 'PUNB0005678', amount: 18000 }
+];
+
+function loadStaffData() {
+    let savedStaff = localStorage.getItem('staffTableData');
+    let staffList = savedStaff ? JSON.parse(savedStaff) : defaultStaffData;
+    
+    let tbody = document.getElementById('staffTableBody');
+    tbody.innerHTML = '';
+    
+    staffList.forEach((staff, index) => {
+        createStaffRowElement(index + 1, staff.name, staff.acc, staff.ifsc, staff.amount);
+    });
+    calcStaffTotal();
+}
+
+function createStaffRowElement(index, name, acc, ifsc, amount) {
+    let tbody = document.getElementById('staffTableBody');
+    let tr = document.createElement('tr');
+    tr.innerHTML = `
+        <td>${index}</td>
+        <td><input type="text" class="st-name" value="${name}" oninput="saveStaffData()"></td>
+        <td><input type="text" class="st-acc" value="${acc}" oninput="saveStaffData()"></td>
+        <td><input type="text" class="st-ifsc" value="${ifsc}" style="text-transform:uppercase;" oninput="saveStaffData()"></td>
+        <td><input type="number" class="st-amt" value="${amount}" oninput="saveStaffData()"></td>
+        <td class="no-print"><button class="btn-del-row" onclick="deleteStaffRow(this)">❌</button></td>
+    `;
+    tbody.appendChild(tr);
+}
+
+function addStaffRow() {
+    let tbody = document.getElementById('staffTableBody');
+    let rowCount = tbody.rows.length + 1;
+    createStaffRowElement(rowCount, '', '', '', 0);
+    saveStaffData();
+}
+
+function deleteStaffRow(btn) {
+    let tr = btn.parentElement.parentElement;
+    tr.remove();
+    reindexStaffRows();
+    saveStaffData();
+}
+
+function reindexStaffRows() {
+    let tbody = document.getElementById('staffTableBody');
+    Array.from(tbody.rows).forEach((row, idx) => {
+        row.cells[0].innerText = idx + 1;
+    });
+}
+
+function saveStaffData() {
+    let tbody = document.getElementById('staffTableBody');
+    let staffList = [];
+    
+    Array.from(tbody.rows).forEach(row => {
+        let name = row.querySelector('.st-name').value;
+        let acc = row.querySelector('.st-acc').value;
+        let ifsc = row.querySelector('.st-ifsc').value;
+        let amount = parseFloat(row.querySelector('.st-amt').value) || 0;
+        staffList.push({ name, acc, ifsc, amount });
+    });
+
+    localStorage.setItem('staffTableData', JSON.stringify(staffList));
+    calcStaffTotal();
+}
+
+function calcStaffTotal() {
+    let tbody = document.getElementById('staffTableBody');
+    let totalAmt = 0;
+    let count = tbody.rows.length;
+
+    Array.from(tbody.rows).forEach(row => {
+        let amt = parseFloat(row.querySelector('.st-amt').value) || 0;
+        totalAmt += amt;
+    });
+
+    document.getElementById('totalStaffCount').innerText = count;
+    document.getElementById('totalStaffAmount').innerText = '₹ ' + Math.round(totalAmt);
+}
+
+function exportToCSV() {
+    let tbody = document.getElementById('staffTableBody');
+    let csvContent = "data:text/csv;charset=utf-8,S.No,Staff Name,Account Number,IFSC Code,Amount(Rs)\n";
+
+    Array.from(tbody.rows).forEach((row, idx) => {
+        let name = row.querySelector('.st-name').value.replace(/,/g, "");
+        let acc = row.querySelector('.st-acc').value;
+        let ifsc = row.querySelector('.st-ifsc').value;
+        let amount = row.querySelector('.st-amt').value;
+        csvContent += `${idx + 1},${name},${acc},${ifsc},${amount}\n`;
+    });
+
+    let encodedUri = encodeURI(csvContent);
+    let link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "Staff_Bank_Advice.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+/* --- OTHER CALCULATOR LOGICS --- */
 function calcSalary() {
     let basic = parseFloat(document.getElementById('basicSalary').value) || 0;
     
@@ -907,7 +1101,6 @@ function calcExpPredictor() {
     let years = parseInt(document.getElementById('predYears').value) || 10;
     let inflationRate = parseFloat(document.getElementById('predInflation').value) || 6;
 
-    // Formula: Future Value = Present Value * (1 + inflation/100)^years
     let futureExp = currentExp * Math.pow((1 + (inflationRate / 100)), years);
     let diff = futureExp - currentExp;
 
